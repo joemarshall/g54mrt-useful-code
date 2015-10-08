@@ -1,0 +1,88 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module grovepi</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>grovepi</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/g54ubi/grovepi.py">/home/g54ubi/grovepi.py</a></font></td></tr></table>
+    <p><tt>#&nbsp;grovepi.py<br>
+#&nbsp;v1.1,&nbsp;with&nbsp;Joe&nbsp;M&nbsp;additions<br>
+#&nbsp;This&nbsp;file&nbsp;provides&nbsp;the&nbsp;basic&nbsp;functions&nbsp;for&nbsp;using&nbsp;the&nbsp;GrovePi<br>
+#<br>
+#&nbsp;Joe&nbsp;M:&nbsp;added&nbsp;things&nbsp;to&nbsp;a)make&nbsp;it&nbsp;faster,&nbsp;and&nbsp;b)do&nbsp;retries&nbsp;when&nbsp;i2c&nbsp;fails,&nbsp;as&nbsp;it&nbsp;seems&nbsp;to&nbsp;do&nbsp;sometimes,<br>
+#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;especially&nbsp;with&nbsp;fewer&nbsp;delays.&nbsp;Oh,&nbsp;and&nbsp;pydoc<br>
+#<br>
+#&nbsp;Karan&nbsp;Nayan,&nbsp;Joe&nbsp;Marshall<br>
+#&nbsp;Initial&nbsp;Date:&nbsp;13&nbsp;Feb&nbsp;2014<br>
+#&nbsp;Last&nbsp;Updated:&nbsp;23&nbsp;Sep&nbsp;2014<br>
+#&nbsp;<br>
+#<br>
+#&nbsp;<a href="http://www.dexterindustries.com/">http://www.dexterindustries.com/</a><br>
+#<br>
+#&nbsp;These&nbsp;files&nbsp;have&nbsp;been&nbsp;made&nbsp;available&nbsp;online&nbsp;through&nbsp;a&nbsp;Creative&nbsp;Commons&nbsp;Attribution-ShareAlike&nbsp;3.0&nbsp;&nbsp;license.<br>
+#&nbsp;(<a href="http://creativecommons.org/licenses/by-sa/3.0/">http://creativecommons.org/licenses/by-sa/3.0/</a>)<br>
+################################################################################################################</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="RPi.GPIO.html">RPi.GPIO</a><br>
+<a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="smbus.html">smbus</a><br>
+<a href="struct.html">struct</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-acc_xyz"><strong>acc_xyz</strong></a>()</dt><dd><tt>Read&nbsp;Grove&nbsp;Accelerometer&nbsp;(+/-&nbsp;1.5g)&nbsp;XYZ&nbsp;value</tt></dd></dl>
+ <dl><dt><a name="-analogRead"><strong>analogRead</strong></a>(pin)</dt><dd><tt>Read&nbsp;analog&nbsp;value&nbsp;from&nbsp;analog&nbsp;pin&nbsp;&lt;pin&gt;</tt></dd></dl>
+ <dl><dt><a name="-analogWrite"><strong>analogWrite</strong></a>(pin, value)</dt><dd><tt>Write&nbsp;PWM&nbsp;on&nbsp;digital&nbsp;pin&nbsp;&lt;pin&gt;</tt></dd></dl>
+ <dl><dt><a name="-dht"><strong>dht</strong></a>(pin, module_type)</dt><dd><tt>Read&nbsp;and&nbsp;return&nbsp;temperature&nbsp;and&nbsp;humidity&nbsp;from&nbsp;Grove&nbsp;DHT&nbsp;Pro</tt></dd></dl>
+ <dl><dt><a name="-digitalRead"><strong>digitalRead</strong></a>(pin)</dt><dd><tt>Arduino&nbsp;Digital&nbsp;Read&nbsp;from&nbsp;digital&nbsp;pin&nbsp;&lt;pin&gt;</tt></dd></dl>
+ <dl><dt><a name="-digitalWrite"><strong>digitalWrite</strong></a>(pin, value)</dt><dd><tt>Arduino&nbsp;Digital&nbsp;write&nbsp;to&nbsp;digital&nbsp;pin&nbsp;&lt;pin&gt;</tt></dd></dl>
+ <dl><dt><a name="-pinMode"><strong>pinMode</strong></a>(pin, mode)</dt><dd><tt>Arduino&nbsp;set&nbsp;pin&nbsp;mode&nbsp;for&nbsp;digital&nbsp;pin&nbsp;&lt;pin&gt;<br>
+&nbsp;<br>
+Don't&nbsp;mess&nbsp;with&nbsp;this&nbsp;-&nbsp;if&nbsp;you&nbsp;set&nbsp;a&nbsp;pin&nbsp;as&nbsp;output,&nbsp;and&nbsp;connect&nbsp;a&nbsp;sensor&nbsp;to&nbsp;it,&nbsp;bad&nbsp;things&nbsp;can&nbsp;happen.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pin:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;pin&nbsp;to&nbsp;set&nbsp;the&nbsp;output&nbsp;mode&nbsp;on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mode:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One&nbsp;of&nbsp;"OUTPUT"&nbsp;or&nbsp;"INPUT",&nbsp;as&nbsp;to&nbsp;whether&nbsp;this&nbsp;pin&nbsp;is&nbsp;an&nbsp;output&nbsp;or&nbsp;an&nbsp;input.</tt></dd></dl>
+ <dl><dt><a name="-read_i2c_block"><strong>read_i2c_block</strong></a>(address)</dt><dd><tt>Read&nbsp;I2C&nbsp;block,&nbsp;used&nbsp;internally&nbsp;only</tt></dd></dl>
+ <dl><dt><a name="-read_i2c_byte"><strong>read_i2c_byte</strong></a>(address)</dt><dd><tt>Read&nbsp;I2C&nbsp;byte,&nbsp;used&nbsp;internally&nbsp;only</tt></dd></dl>
+ <dl><dt><a name="-rtc_getTime"><strong>rtc_getTime</strong></a>()</dt><dd><tt>Read&nbsp;from&nbsp;Grove&nbsp;RTC</tt></dd></dl>
+ <dl><dt><a name="-temp"><strong>temp</strong></a>(pin)</dt><dd><tt>Read&nbsp;temp&nbsp;from&nbsp;Grove&nbsp;Temp&nbsp;Sensor</tt></dd></dl>
+ <dl><dt><a name="-ultrasonicRead"><strong>ultrasonicRead</strong></a>(pin)</dt><dd><tt>Read&nbsp;value&nbsp;from&nbsp;Grove&nbsp;Ultrasonic&nbsp;sensor</tt></dd></dl>
+ <dl><dt><a name="-write_i2c_block"><strong>write_i2c_block</strong></a>(address, block)</dt><dd><tt>Write&nbsp;I2C&nbsp;block,&nbsp;used&nbsp;internally&nbsp;only</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>aRead_cmd</strong> = [3]<br>
+<strong>aWrite_cmd</strong> = [4]<br>
+<strong>acc_xyz_cmd</strong> = [20]<br>
+<strong>address</strong> = 4<br>
+<strong>bus</strong> = &lt;SMBus object&gt;<br>
+<strong>dRead_cmd</strong> = [1]<br>
+<strong>dWrite_cmd</strong> = [2]<br>
+<strong>dht_temp_cmd</strong> = [40]<br>
+<strong>pMode_cmd</strong> = [5]<br>
+<strong>rev</strong> = 2<br>
+<strong>rtc_getTime_cmd</strong> = [30]<br>
+<strong>uRead_cmd</strong> = [7]</td></tr></table>
+</body></html>

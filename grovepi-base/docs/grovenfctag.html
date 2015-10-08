@@ -1,0 +1,94 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module grovenfctag</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>grovenfctag</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/g54ubi/grovenfctag.py">/home/g54ubi/grovenfctag.py</a></font></td></tr></table>
+    <p><tt>Writes&nbsp;and&nbsp;reads&nbsp;to&nbsp;the&nbsp;eeprom&nbsp;of&nbsp;the&nbsp;Grove&nbsp;NFC&nbsp;Tag&nbsp;module<br>
+<a href="http://www.seeedstudio.com/wiki/Grove_-_NFC_Tag">http://www.seeedstudio.com/wiki/Grove_-_NFC_Tag</a><br>
+&nbsp;<br>
+example&nbsp;usage:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;(grovenfctag.<a href="#-readNFCData">readNFCData</a>(0,16))&nbsp;#&nbsp;display&nbsp;the&nbsp;first&nbsp;16&nbsp;bytes&nbsp;of&nbsp;the&nbsp;NFC&nbsp;tag<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;time.sleep(0.1)#&nbsp;good&nbsp;idea&nbsp;to&nbsp;pause&nbsp;between&nbsp;read&nbsp;and&nbsp;writes<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grovenfctag.<a href="#-writeNFCData">writeNFCData</a>(0,[11,12,13,14,15,16,17,18,19])#&nbsp;write&nbsp;data&nbsp;to&nbsp;position&nbsp;0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print&nbsp;(grovenfctag.<a href="#-readNFCData">readNFCData</a>(0,16))&nbsp;#&nbsp;display&nbsp;the&nbsp;first&nbsp;16&nbsp;bytes&nbsp;of&nbsp;the&nbsp;NFC&nbsp;tag</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="smbus.html">smbus</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="grovenfctag.html#NFCTagBuffer">NFCTagBuffer</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="NFCTagBuffer">class <strong>NFCTagBuffer</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="NFCTagBuffer-__init__"><strong>__init__</strong></a>(self)</dt></dl>
+
+<dl><dt><a name="NFCTagBuffer-flush"><strong>flush</strong></a>(self, partialBuffer<font color="#909090">=True</font>)</dt><dd><tt>#&nbsp;if&nbsp;we&nbsp;have&nbsp;more&nbsp;than&nbsp;4&nbsp;bytes,&nbsp;actually&nbsp;write&nbsp;blocks&nbsp;out<br>
+#&nbsp;if&nbsp;partialBuffer&nbsp;is&nbsp;true,&nbsp;then&nbsp;we&nbsp;write&nbsp;a&nbsp;partial&nbsp;buffer&nbsp;if&nbsp;we<br>
+#&nbsp;have&nbsp;&gt;1&nbsp;and&nbsp;&lt;4&nbsp;bytes<br>
+#&nbsp;buffer&nbsp;space&nbsp;1&nbsp;takes&nbsp;the&nbsp;current&nbsp;position</tt></dd></dl>
+
+<dl><dt><a name="NFCTagBuffer-writeData"><strong>writeData</strong></a>(self, bytes)</dt><dd><tt>#&nbsp;write&nbsp;data&nbsp;to&nbsp;the&nbsp;tag&nbsp;at&nbsp;current&nbsp;position&nbsp;and&nbsp;increment&nbsp;write&nbsp;position&nbsp;if&nbsp;needed</tt></dd></dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-readNFCData"><strong>readNFCData</strong></a>(addr, length)</dt><dd><tt>Read&nbsp;some&nbsp;data&nbsp;from&nbsp;eeprom&nbsp;of&nbsp;the&nbsp;Grove&nbsp;NFC&nbsp;Tag&nbsp;module&nbsp;<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;addr:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Address&nbsp;to&nbsp;read&nbsp;data&nbsp;from<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;length:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;bytes&nbsp;to&nbsp;read<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Array&nbsp;of&nbsp;bytes</tt></dd></dl>
+ <dl><dt><a name="-writeNFCData"><strong>writeNFCData</strong></a>(addr, data)</dt><dd><tt>Write&nbsp;some&nbsp;data&nbsp;to&nbsp;the&nbsp;eeprom&nbsp;of&nbsp;the&nbsp;Grove&nbsp;NFC&nbsp;Tag&nbsp;module<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;addr:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address&nbsp;to&nbsp;write&nbsp;data&nbsp;to<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Array&nbsp;of&nbsp;bytes&nbsp;to&nbsp;write</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>NFC_ADDR</strong> = 83<br>
+<strong>bus</strong> = &lt;SMBus object&gt;</td></tr></table>
+</body></html>

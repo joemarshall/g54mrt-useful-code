@@ -1,0 +1,61 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module grovelcd</title>
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>grovelcd</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/g54ubi/grovelcd.py">/home/g54ubi/grovelcd.py</a></font></td></tr></table>
+    <p><tt>Writes&nbsp;text&nbsp;to&nbsp;the&nbsp;Grove&nbsp;RGB&nbsp;LCD,&nbsp;and&nbsp;controls&nbsp;the&nbsp;backlight&nbsp;colour<br>
+&nbsp;<br>
+example&nbsp;code:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;text&nbsp;(\n&nbsp;goes&nbsp;onto&nbsp;the&nbsp;second&nbsp;line&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grovelcd.<a href="#-setText">setText</a>("Hello&nbsp;world,&nbsp;\nHow&nbsp;are&nbsp;you")&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;set&nbsp;the&nbsp;backlight:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;red&nbsp;off<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;green&nbsp;half&nbsp;of&nbsp;full&nbsp;brightness<br>
+&nbsp;&nbsp;&nbsp;&nbsp;#&nbsp;blue&nbsp;one&nbsp;quarter&nbsp;of&nbsp;full&nbsp;brighness.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grovelcd.<a href="#-setRGB">setRGB</a>(0,128,64)</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="smbus.html">smbus</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-setRGB"><strong>setRGB</strong></a>(r, g, b)</dt><dd><tt>Set&nbsp;backlight&nbsp;colour&nbsp;to&nbsp;(r,g,b)<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;r:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;red&nbsp;(0=off,&nbsp;255&nbsp;=&nbsp;fully&nbsp;on)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;g:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;green&nbsp;(0=off,&nbsp;255&nbsp;=&nbsp;fully&nbsp;on)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;b:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blue&nbsp;(0=off,&nbsp;255&nbsp;=&nbsp;fully&nbsp;on)</tt></dd></dl>
+ <dl><dt><a name="-setText"><strong>setText</strong></a>(text, clear<font color="#909090">=False</font>)</dt><dd><tt>Set&nbsp;text&nbsp;on&nbsp;display&nbsp;to&nbsp;&lt;text&gt;</tt></dd></dl>
+ <dl><dt><a name="-textCommand"><strong>textCommand</strong></a>(cmd)</dt><dd><tt>Used&nbsp;internally,&nbsp;don't&nbsp;mess&nbsp;with&nbsp;it&nbsp;unless&nbsp;you&nbsp;know&nbsp;what&nbsp;you're&nbsp;doing</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>DISPLAY_RGB_ADDR</strong> = 98<br>
+<strong>DISPLAY_TEXT_ADDR</strong> = 62<br>
+<strong>bus</strong> = &lt;SMBus object&gt;<br>
+<strong>firstTime</strong> = True</td></tr></table>
+</body></html>
