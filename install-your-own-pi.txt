@@ -1,0 +1,66 @@
+First, download raspbian image from: 
+https://www.raspberrypi.org/downloads/raspbian/
+We use Wheezy on the lab PIs, I think either will work.
+
+Write the image to an sd card. On windows I used Win32diskimager
+http://sourceforge.net/projects/win32diskimager/?source=typ_redirect
+
+Make raspberry pi talk to the grovepi (via I2C)
+https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
+Start up the raspberry pi with a screen/keyboard (you can connect hdmi to screens in the lab, ask us if you need a keyboard (or unplug from lab machines))
+1) It will start up in raspb-config, select "expand filesystem"
+2) Select advanced options
+3) Select I2C, and press yes to everything - I2C is how the raspberry pi talks to the grovepi board
+4) Finish, select reboot now. Wait for it to come back
+5) Log in (pi / raspberry)
+
+6)Connect to the wifi network or an ethernet cable.
+If you're in the computer lab, you can connect to UoN secure. To do this:
+ 
+type:
+ sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+ 
+paste into that conf file exactly the below, except with your username and password in there:
+
+network={
+ssid="UoN-secures"
+key_mgmt=WPA-EAP
+eap=PEAP MSCHAPV2
+identity="<your username eg:pszpw2"
+password="<your password eg:mylovelypassword"
+}
+
+or for a home network it looks like this:
+
+network={
+ssid="Joe and Penny"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP TKIP
+group=CCMP TKIP
+psk="your network password"
+}
+
+7)Restart wifi
+type: sudo ifdown wlan0 
+sudo ifup wlan0
+
+
+8) update everything
+sudo apt-get update
+sudo apt-get upgrade
+
+8)  Install useful i2c utilities:
+sudo apt-get install python-smbus
+sudo apt-get install i2c-tools
+
+9) make sure kernel support for i2c is reallyu on
+sudo nano /boot/config.txt 
+Add the lines:
+dtparam=i2c1=on
+dtparam=i2c_arm=on
+to the end of the file
+
+
+9)Check it is talking to the grovepi
+sudo i2cdetect -y
