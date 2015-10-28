@@ -184,46 +184,51 @@ def rtc_getTime():
 
 def dht(pin,module_type):
     """ Read and return temperature and humidity from Grove DHT Pro """
-    write_i2c_block(address,dht_temp_cmd+[pin,module_type,0])
-
-    #Delay necessary for proper reading fron DHT sensor
-    time.sleep(.6) 
-    try:
-        read_i2c_byte(address)
-        number = read_i2c_block(address)
-        if number==-1:
-            return -1
-    except (TypeError,IndexError,IOError):
-        return -1
-    #data returned in IEEE format as a float in 4 bytes 
-    f=0
-
-    for element in reversed(number[1:5]):   #data is reversed 
-        hex_val=hex(element)    #Converted to hex
-        #print hex_val
+    for retries in range(5):
         try:
-            h_val=hex_val[2]+hex_val[3]
-        except IndexError:
-            h_val='0'+hex_val[2]
-        if f==0:    #Convert to char array
-            h=h_val
-            f=1
-        else:
-            h=h+h_val
-    t=round(struct.unpack('!f', h.decode('hex'))[0],2)#convert the temp back to float
+            write_i2c_block(address,dht_temp_cmd+[pin,module_type,0])
 
-    h=''
-    for element in reversed(number[5:9]):   #data is reversed 
-        hex_val=hex(element)    #Converted to hex
-        #print hex_val
-        try:
-            h_val=hex_val[2]+hex_val[3]
-        except IndexError:
-            h_val='0'+hex_val[2]
-        if f==0:    #Convert to char array
-            h=h_val
-            f=1
-        else:
-            h=h+h_val
-    hum=round(struct.unpack('!f', h.decode('hex'))[0],2)#convert back to float
-    return [t,hum]
+            #Delay necessary for proper reading fron DHT sensor
+            time.sleep(.6) 
+            try:
+                read_i2c_byte(address)
+                number = read_i2c_block(address)
+                if number==-1:
+                    return -1
+            except (TypeError,IndexError):
+                return -1
+            #data returned in IEEE format as a float in 4 bytes 
+            f=0
+
+            for element in reversed(number[1:5]):   #data is reversed 
+                hex_val=hex(element)    #Converted to hex
+                #print hex_val
+                try:
+                    h_val=hex_val[2]+hex_val[3]
+                except IndexError:
+                    h_val='0'+hex_val[2]
+                if f==0:    #Convert to char array
+                    h=h_val
+                    f=1
+                else:
+                    h=h+h_val
+            t=round(struct.unpack('!f', h.decode('hex'))[0],2)#convert the temp back to float
+
+            h=''
+            for element in reversed(number[5:9]):   #data is reversed 
+                hex_val=hex(element)    #Converted to hex
+                #print hex_val
+                try:
+                    h_val=hex_val[2]+hex_val[3]
+                except IndexError:
+                    h_val='0'+hex_val[2]
+                if f==0:    #Convert to char array
+                    h=h_val
+                    f=1
+                else:
+                    h=h+h_val
+            hum=round(struct.unpack('!f', h.decode('hex'))[0],2)#convert back to float
+            return [t,hum]
+        except IOError:
+            pass
+    print "Error, couldn't read DHT 5 times"
