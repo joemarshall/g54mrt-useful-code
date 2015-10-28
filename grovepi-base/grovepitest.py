@@ -2,6 +2,7 @@ import grovepi
 import grovelcd
 import grove6axis
 import grovenfctag
+import time
 
 print "timestamp,button,temperature,ultrasound"
 while True:

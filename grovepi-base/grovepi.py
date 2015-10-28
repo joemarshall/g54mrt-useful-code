@@ -232,3 +232,4 @@ def dht(pin,module_type):
         except IOError:
             pass
     print "Error, couldn't read DHT 5 times"
+    return -1
