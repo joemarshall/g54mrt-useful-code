@@ -1,3 +1,18 @@
+# this code is an example of a state machine implemented in python.
+#
+# How the state machine works:
+# 
+# we have a current state, in this case it is the currentState variable, and the change_state_counter
+#
+# Each time round the loop, you read the sensors
+# and decide based on the current state, whether to change
+# into a different state.
+#
+# This kind of thing is useful, because it avoids getting tangled up in complex if statements
+# with sensing in different places, by always just sensing at the top of the loop, 
+# and then dealing with it based on current state.
+# 
+
 import grovepi
 import time
 
