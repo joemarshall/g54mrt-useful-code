@@ -154,7 +154,7 @@ def ultrasonicRead(pin):
     return -1
         
 def ultrasonicReadBegin(pin):
-    """ Read value from Grove Ultrasonic sensor """
+    """ Start to read value from Grove Ultrasonic sensor - you can't do other grovepi things before doing ultrasonicReadFinish, but you can read accelerometer, nfc etc. """
     for retries in range(5):
         try:
             write_i2c_block(address,uRead_cmd+[pin,0,0])
@@ -165,6 +165,7 @@ def ultrasonicReadBegin(pin):
     return -1
 
 def ultrasonicReadFinish(pin):
+    """ Finish reading value from Grove Ultrasonic sensor - you can't do other grovepi things between ultrasonicReadBegin and ultrasonicReadFinish, but you can read accelerometer, nfc etc. """
     for retries in range(5):
         try:
             read_i2c_byte(address)
