@@ -153,7 +153,29 @@ def ultrasonicRead(pin):
     print("IOError ultrasonic read")
     return -1
         
+def ultrasonicReadBegin(pin):
+    """ Read value from Grove Ultrasonic sensor """
+    for retries in range(5):
+        try:
+            write_i2c_block(address,uRead_cmd+[pin,0,0])
+            return 0
+        except IOError:
+            pass
+    print("IOError ultrasonic read")
+    return -1
 
+def ultrasonicReadFinish(pin):
+    for retries in range(5):
+        try:
+            read_i2c_byte(address)
+            number = read_i2c_block(address) 
+            return (number[1]*256+number[2])
+        except IOError:
+            pass
+    print("IOError ultrasonic read")
+    return -1         
+        
+        
 def acc_xyz():
     """ Read Grove Accelerometer (+/- 1.5g) XYZ value """
     try:
