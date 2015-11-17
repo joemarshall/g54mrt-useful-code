@@ -66,7 +66,7 @@ INT_SOURCE_CLEAR=0x03
 GAIN_1=0x00
 GAIN_4=0x10
 GAIN_16=0x20
-GANI_64=0x30
+GAIN_64=0x30
 PRESCALER_1=0x00
 PRESCALER_2=0x01
 PRESCALER_4=0x02
@@ -81,19 +81,23 @@ bus=smbus.SMBus(1)
 
 def _initSensor():
     # set something to do with timing
-    smb.write_byte_data(COLOR_SENSOR_ADDR,REG_TIMING,INTEG_MODE_FREE | INTEG_PARAM_PULSE_COUNT1) #get data as fast as the chip wants to
-    smb.write_byte_data(COLOR_SENSOR_ADDR,REG_INT_SOURCE,INT_SOURCE_CLEAR) # fire interrupt once clear signal is loaded
-    smb.write_byte_data(COLOR_SENSOR_ADDR,REG_INT,INTR_LEVEL | INTR_PERSIST_EVERY) # interrupt every time round (ignored I think)
-    smb.write_byte_data(COLOR_SENSOR_ADDR,REG_GAIN,GAIN_1 | PRESCALER_1) # set scaling of the data
-    smb.write_byte_data(COLOR_SENSOR_ADDR,REG_CTL,CTL_DAT_INITIATE)    # turn on the sensor readings
+    bus.write_byte_data(COLOR_SENSOR_ADDR,REG_TIMING,INTEG_MODE_FREE | INTEG_PARAM_PULSE_COUNT1) #get data as fast as the chip wants to
+    bus.write_byte_data(COLOR_SENSOR_ADDR,REG_INT_SOURCE,INT_SOURCE_CLEAR) # fire interrupt once clear signal is loaded
+    bus.write_byte_data(COLOR_SENSOR_ADDR,REG_INT,INTR_LEVEL | INTR_PERSIST_EVERY) # interrupt every time round (ignored I think)
+    bus.write_byte_data(COLOR_SENSOR_ADDR,REG_GAIN,GAIN_64 | PRESCALER_4) # set scaling of the data
+    bus.write_byte_data(COLOR_SENSOR_ADDR,REG_CTL,CTL_DAT_INITIATE)    # turn on the sensor readings
 
 _initSensor()
     
 def getRGBC():
-    r=bus.read_word_data(COLOR_SENSOR_ADDR,0x10)
-    g=bus.read_word_data(COLOR_SENSOR_ADDR,0x12)
-    b=bus.read_word_data(COLOR_SENSOR_ADDR,0x14)
-    c=bus.read_word_data(COLOR_SENSOR_ADDR,0x16)
+    r=bus.read_byte_data(COLOR_SENSOR_ADDR,REG_RED_LOW)
+    r+=256*bus.read_byte_data(COLOR_SENSOR_ADDR,REG_RED_HIGH)
+    g=bus.read_byte_data(COLOR_SENSOR_ADDR,REG_GREEN_LOW)
+    g+=256*bus.read_byte_data(COLOR_SENSOR_ADDR,REG_GREEN_HIGH)
+    b=bus.read_byte_data(COLOR_SENSOR_ADDR,REG_BLUE_LOW)
+    b+=256*bus.read_byte_data(COLOR_SENSOR_ADDR,REG_BLUE_HIGH)
+    c=bus.read_byte_data(COLOR_SENSOR_ADDR,REG_CLEAR_LOW)
+    c+=256*bus.read_byte_data(COLOR_SENSOR_ADDR,REG_CLEAR_HIGH)
     return (r,g,b,c)
 
 
@@ -101,6 +105,3 @@ if __name__=="__main__":
     while True:
         (r,g,b,c)=getRGBC()
         print "Color Sensor RGBC:",(r,g,b,c)
-
-
-
