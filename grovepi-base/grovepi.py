@@ -23,7 +23,7 @@ import struct
 import sys
 
 
-debug=false
+debug=False
 
 if sys.version_info<(3,0):
     p_version=2
