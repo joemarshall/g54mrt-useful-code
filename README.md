@@ -1,4 +1,4 @@
-This repository contains useful python code for G54UBI
+This repository contains useful python code for G54MRT
 
 Folders:
 
