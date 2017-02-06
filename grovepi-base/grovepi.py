@@ -23,9 +23,9 @@ import struct
 import sys
 
 if sys.version_info<(3,0):
-	p_version=2
+    p_version=2
 else:
-	p_version=3
+    p_version=3
 
 rev = GPIO.RPI_REVISION
 if rev == 2 or rev == 3:
@@ -56,57 +56,57 @@ retries = 10
 # Write I2C block
 def write_i2c_block(address, block):
     """ Write I2C block, used internally only """
-	for i in range(retries):
-		try:
-			return bus.write_i2c_block_data(address, 1, block)
-		except IOError:
-			if debug:
-				print ("IOError")
-	return -1
+    for i in range(retries):
+        try:
+            return bus.write_i2c_block_data(address, 1, block)
+        except IOError:
+            if debug:
+                print ("IOError")
+    return -1
 
 # Read I2C byte
 def read_i2c_byte(address):
     """ Read I2C byte, used internally only """
-	for i in range(retries):
-		try:
-			return bus.read_byte(address)
-		except IOError:
-			if debug:
-				print ("IOError")
-	return -1
+    for i in range(retries):
+        try:
+            return bus.read_byte(address)
+        except IOError:
+            if debug:
+                print ("IOError")
+    return -1
 
 
 # Read I2C block
 def read_i2c_block(address):
     """ Read I2C block, used internally only """
-	for i in range(retries):
-		try:
-			return bus.read_i2c_block_data(address, 1)
-		except IOError:
-			if debug:
-				print ("IOError")
-	return -1
+    for i in range(retries):
+        try:
+            return bus.read_i2c_block_data(address, 1)
+        except IOError:
+            if debug:
+                print ("IOError")
+    return -1
 
 def digitalRead(pin):
     """ Arduino Digital Read from digital pin <pin>"""
-	write_i2c_block(address, dRead_cmd + [pin, unused, unused])
-	# time.sleep(.1)
-	n = read_i2c_byte(address)
-	return n
+    write_i2c_block(address, dRead_cmd + [pin, unused, unused])
+    # time.sleep(.1)
+    n = read_i2c_byte(address)
+    return n
 
 # Arduino Digital Write
 def digitalWrite(pin, value):
     """ Arduino Digital write to digital pin <pin>"""
-	write_i2c_block(address, dWrite_cmd + [pin, value, unused])
-	return 1
+    write_i2c_block(address, dWrite_cmd + [pin, value, unused])
+    return 1
     
 def version():
     """ Read the firmware version from the GrovePI board """
-	write_i2c_block(address, version_cmd + [unused, unused, unused])
-	time.sleep(.1)
-	read_i2c_byte(address)
-	number = read_i2c_block(address)
-	return "%s.%s.%s" % (number[1], number[2], number[3])
+    write_i2c_block(address, version_cmd + [unused, unused, unused])
+    time.sleep(.1)
+    read_i2c_byte(address)
+    number = read_i2c_block(address)
+    return "%s.%s.%s" % (number[1], number[2], number[3])
 
     
 #Setting Up Pin mode on Arduino
@@ -121,49 +121,49 @@ def pinMode(pin, mode):
             mode:
                 One of "OUTPUT" or "INPUT", as to whether this pin is an output or an input.
     """
-	if mode == "OUTPUT":
-		write_i2c_block(address, pMode_cmd + [pin, 1, unused])
-	elif mode == "INPUT":
-		write_i2c_block(address, pMode_cmd + [pin, 0, unused])
-	return 1
+    if mode == "OUTPUT":
+        write_i2c_block(address, pMode_cmd + [pin, 1, unused])
+    elif mode == "INPUT":
+        write_i2c_block(address, pMode_cmd + [pin, 0, unused])
+    return 1
         
 
 # Read analog value from Pin
 def analogRead(pin):
     """ Read analog value from analog pin <pin> """
-	write_i2c_block(address, aRead_cmd + [pin, unused, unused])
-	read_i2c_byte(address)
-	number = read_i2c_block(address)
-	return number[1] * 256 + number[2]
+    write_i2c_block(address, aRead_cmd + [pin, unused, unused])
+    read_i2c_byte(address)
+    number = read_i2c_block(address)
+    return number[1] * 256 + number[2]
 
 
 # Write PWM
 def analogWrite(pin, value):
     """ Write PWM on digital pin <pin> """
-	write_i2c_block(address, aWrite_cmd + [pin, value, unused])
-	return 1
+    write_i2c_block(address, aWrite_cmd + [pin, value, unused])
+    return 1
                      
 def temp(pin,model = '1.0'):
     """ Read temp from Grove Temp Sensor """
-	# each of the sensor revisions use different thermistors, each with their own B value constant
-	if model == '1.2':
-		bValue = 4250  # sensor v1.2 uses thermistor ??? (assuming NCP18WF104F03RC until SeeedStudio clarifies)
-	elif model == '1.1':
-		bValue = 4250  # sensor v1.1 uses thermistor NCP18WF104F03RC
-	else:
-		bValue = 3975  # sensor v1.0 uses thermistor TTC3A103*39H
-	a = analogRead(pin)
-	resistance = (float)(1023 - a) * 10000 / a
-	t = (float)(1 / (math.log(resistance / 10000) / bValue + 1 / 298.15) - 273.15)
-	return t
+    # each of the sensor revisions use different thermistors, each with their own B value constant
+    if model == '1.2':
+        bValue = 4250  # sensor v1.2 uses thermistor ??? (assuming NCP18WF104F03RC until SeeedStudio clarifies)
+    elif model == '1.1':
+        bValue = 4250  # sensor v1.1 uses thermistor NCP18WF104F03RC
+    else:
+        bValue = 3975  # sensor v1.0 uses thermistor TTC3A103*39H
+    a = analogRead(pin)
+    resistance = (float)(1023 - a) * 10000 / a
+    t = (float)(1 / (math.log(resistance / 10000) / bValue + 1 / 298.15) - 273.15)
+    return t
     
 def ultrasonicRead(pin):
     """ Read value from Grove Ultrasonic sensor """
-	write_i2c_block(address, uRead_cmd + [pin, unused, unused])
-	time.sleep(.06)	#firmware has a time of 50ms so wait for more than that
-	read_i2c_byte(address)
-	number = read_i2c_block(address)
-	return (number[1] * 256 + number[2])
+    write_i2c_block(address, uRead_cmd + [pin, unused, unused])
+    time.sleep(.06) #firmware has a time of 50ms so wait for more than that
+    read_i2c_byte(address)
+    number = read_i2c_block(address)
+    return (number[1] * 256 + number[2])
 
     
 def ultrasonicReadBegin(pin):
