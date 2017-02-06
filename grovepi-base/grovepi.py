@@ -22,6 +22,9 @@ import RPi.GPIO as GPIO
 import struct
 import sys
 
+
+debug=false
+
 if sys.version_info<(3,0):
     p_version=2
 else:
