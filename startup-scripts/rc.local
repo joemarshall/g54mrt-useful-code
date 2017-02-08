@@ -18,5 +18,6 @@ if [ "$_IP" ]; then
 fi
 
 /usr/bin/python /home/pi/g54mrt-useful-code/startup-scripts/showIP.py &
+/bin/bash /home/pi/g54mrt-useful-code/startup-scripts/checkUpdate.sh &
 
 exit 0
