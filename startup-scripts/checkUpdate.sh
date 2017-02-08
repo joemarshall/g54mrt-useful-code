@@ -2,7 +2,7 @@
 cd /home/pi/g54mrt-useful-code
 
 # wait until github is connectable
-until (/usr/bin/wget -O - https://www.github.com)
+until (/usr/bin/wget -O - https://www.github.com > /dev/null)
 do
   echo "waiting for github"
   sleep 1
