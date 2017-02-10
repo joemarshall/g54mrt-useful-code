@@ -18,21 +18,23 @@ def doUpdate():
     firmwarePath=os.path.join(os.path.dirname(os.path.realpath(__file__)),"grove_pi_firmware.hex")
     print firmwarePath
     grovelcd.setText("Try update firmware\n---------------")
-    retVal1=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","lfuse:w:0xFF:m"])
-    if retVal1==0:
-        grovelcd.setText("Try update firmware\n**----------")
-        retVal2=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","hfuse:w:0xDA:m"])
-        grovelcd.setText("Try update firmware\n****--------")
-        retVal3=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","efuse:w:0x05:m"])
-        grovelcd.setText("Try update firmware\n******------")
-        retVal4=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","flash:w:%s"%(firmwarePath)])
-        if retVal4==0:
-            newVer=grovepi.version()
-            grovelcd.setText("Update ok\n"+newVer)
-        else:
-           grovelcd.setText("Update failed\nPress button")
+    retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","lfuse:w:0xFF:m"])
+    if retVal==0:
+        grovelcd.setText("Try update\n**----------")
+        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","hfuse:w:0xDA:m"])
+    if retVal==0:
+        grovelcd.setText("Try update\n****--------")
+        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","efuse:w:0x05:m"])
+    if retVal==0:
+        grovelcd.setText("Try update\n******------")
+        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","flash:w:%s"%(firmwarePath)])
+    if retVal==0:
+        time.sleep(0.5)
+        newVer=grovepi.version()
+        grovelcd.setText("Update ok\n"+newVer)
     else:
        grovelcd.setText("Update failed\nPress button")
+
     while grovepi.digitalRead(2)==0:
         time.sleep(0.01)
     while grovepi.digitalRead(2)==1:
