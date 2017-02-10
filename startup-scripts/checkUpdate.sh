@@ -9,14 +9,12 @@ do
 done
 
 #pull any changes from git
-if git pull | grep -q "up-to-date"; then
+if sudo -u pi git pull | grep -q "up-to-date"; then
 echo "no changes"
 else
-echo "changed git - copying code across"
-sudo chown pi.pi -R /home/pi/g54mrt-useful-code
-sudo cp /home/pi/g54mrt-useful-code/startup-scripts/rc.local /etc/rc.local
-sudo cp -r /home/pi/g54mrt-useful-code/grovepi-base/* /home/ubi/
-sudo chown ubi.ubi /home/ubi/*
+# run things that need to be run after this git update
+/bin/bash /home/pi/g54mrt-useful-code/startup-scripts/afterUpdate.sh
 fi
+
 sudo systemctl disable serial-getty@ttyAMA0.service
 sudo /usr/bin/python /home/pi/g54mrt-useful-code/startup-scripts/checkFirmware.py
