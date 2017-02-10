@@ -17,7 +17,7 @@ if [ "$_IP" ]; then
   printf "My IP address is %s\n" "$_IP"
 fi
 
-/usr/bin/python /home/pi/g54mrt-useful-code/startup-scripts/showIP.py &
-/bin/bash /home/pi/g54mrt-useful-code/startup-scripts/checkUpdate.sh &
+/usr/bin/sudo -u pi /usr/bin/python /home/pi/g54mrt-useful-code/startup-scripts/showIP.py &
+/usr/bin/sudo -u pi /bin/bash /home/pi/g54mrt-useful-code/startup-scripts/checkUpdate.sh &
 
 exit 0

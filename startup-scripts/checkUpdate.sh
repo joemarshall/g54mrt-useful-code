@@ -9,7 +9,7 @@ do
 done
 
 #pull any changes from git
-if sudo -u pi git pull | grep -q "up-to-date"; then
+if git pull | grep -q "up-to-date"; then
 echo "no changes"
 else
 # run things that need to be run after this git update
