@@ -10,6 +10,8 @@ grovelcd.setRGB(128,128,128)
 cyclePos=1
 grovelcd.setText("No address yet")
 
+curText=""
+
 # changed to only say IP address, so as not to confuse people with gateway addresses
 
 def formatAddr(addr,type):
@@ -44,7 +46,10 @@ while countLeft==None or countLeft>0:
           ethAddr=formatAddr(values[8],"e")
         if values[2].find("wlan")!=-1:
           wlanAddr=formatAddr(values[8],"w")
-    grovelcd.setText(ethAddr+"\n"+wlanAddr)
+  newText=ethAddr+"\n"+wlanAddr
+  if newText!=curText:
+     curText=newText
+     grovelcd.setText(newText)
   time.sleep(2.0)
   if countLeft!=None:
     countLeft-=2
