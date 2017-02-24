@@ -357,6 +357,17 @@ class Device(pn53x.Device):
         return self.chipset.tg_init_as_target(*args)
 
 def init(transport):
+    if transport.TYPE == "I2C":
+        transport.open()
+        long_preamble = bytearray(10)
+        get_version_cmd = bytearray.fromhex("0000ff02fed4022a00")
+        get_version_rsp = bytearray.fromhex("0000ff06fad50332")
+        transport.write(long_preamble + get_version_cmd)
+        ack=transport.read(timeout=100)
+        response=transport.read(timeout=100)
+        if response.startswith(get_version_rsp):
+            chipset = Chipset(transport, logger=log)
+            return Device(chipset, logger=log)
     if transport.TYPE == "TTY":
         baudrate = 115200 # PN532 initial baudrate
         transport.open(transport.port, baudrate)

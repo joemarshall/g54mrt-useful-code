@@ -17,7 +17,7 @@ import nfc.ndef
 import nfc.tag
 import nfc.clf
 
-_cardFrontend=nfc.ContactlessFrontend('tty:AMA0:pn532')
+_cardFrontend=nfc.ContactlessFrontend('i2c:0x24:pn532')
 _nextTimeout=0
 
 def _on_connect(tag):
@@ -54,6 +54,6 @@ def isTimeOut():
   return False
 
 if __name__=="__main__":
-  waitForTag(5)
+  print waitForTag(200)
 
 

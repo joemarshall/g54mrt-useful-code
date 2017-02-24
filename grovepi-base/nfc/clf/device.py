@@ -109,6 +109,19 @@ def connect(path):
                     tty.close()
                     if not globbed: raise
 
+    found = transport.I2C.find(path)
+    if found is not None:
+        devices = found[0]
+        drivers = found[1] if found[1] else ["pn532"]
+        importlib.import_module("nfc.clf.pn532")
+        for drv in drivers:
+            for dev in devices:
+                driver = importlib.import_module("nfc.clf." + drv)
+                i2c = transport.I2C(dev)
+                device = driver.init(i2c)
+                device._path= dev
+                return device
+                    
     if path.startswith("udp"):
         path = path.split(':')
         host = str(path[1]) if len(path) > 1 and path[1] else 'localhost'

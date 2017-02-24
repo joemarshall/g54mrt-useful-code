@@ -239,6 +239,7 @@ class Chipset(object):
         if not frame[1] == cmd_code + 1:
             self.log.error("unexpected response code")
             raise IOError(errno.EIO, os.strerror(errno.EIO))
+        
 
         return frame[2:-2]
 
@@ -338,6 +339,7 @@ class Chipset(object):
         
     def rf_configuration(self, cfg_item, cfg_data):
         """Send an RFConfiguration command."""
+
         self.command(0x32, chr(cfg_item) + bytearray(cfg_data), timeout=0.1)
 
     def in_jump_for_dep(self, act_pass, br, passive_data, nfcid3, gi):
