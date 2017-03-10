@@ -4,5 +4,5 @@ print "timestamp,motion,sound"
 while True:
   m=grovepi.digitalRead(4)
   s=grovepi.analogRead(0)
-  print time.time(),",",m,",",s
+  print "%f,%d,%d"%(time.time(),m,s)
   time.sleep(1)
