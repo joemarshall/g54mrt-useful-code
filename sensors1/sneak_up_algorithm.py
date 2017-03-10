@@ -7,10 +7,10 @@ while True:
   m=grovepi.digitalRead(4)
   s=grovepi.analogRead(0)
   # a loud noise is a sneak
-  if s>400:
+  if s>200:
     sneak_detect=1
   # or a medium noise and motion sensor firing
-  elif s>200 and m==1:
+  elif s>100 and m==1:
     sneak_detect=1
   else:
   # maybe don't fire if we hear no big noises 

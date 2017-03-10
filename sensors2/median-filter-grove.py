@@ -1,4 +1,5 @@
 import grovepi
+import time
 import collections # for deque class
 
 # the following code does the median filter itself
@@ -10,8 +11,9 @@ import collections # for deque class
 # will be pushed off the other end     
 historyBuffer=collections.deque(maxlen=21)
 while True:
-  dataPoint=grovepi.analogRead(0)
+  dataPoint=grovepi.analogRead(1)
   historyBuffer.append(dataPoint)
   orderedHistory=sorted(historyBuffer)
   median=orderedHistory[int(len(orderedHistory)/2)]
   print dataPoint,",",median
+  time.sleep(0.1)

@@ -1,7 +1,7 @@
 import grovepi
 import time
 
-PIR1_PIN = 2
+PIR1_PIN = 4
 PIR2_PIN = 3
 
 lastPIR1=None
