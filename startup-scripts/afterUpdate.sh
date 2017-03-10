@@ -6,5 +6,3 @@ sudo chown pi.pi -R /home/pi/g54mrt-useful-code
 sudo cp /home/pi/g54mrt-useful-code/startup-scripts/rc.local /etc/rc.local
 sudo cp -r /home/pi/g54mrt-useful-code/grovepi-base/* /home/ubi/
 sudo chown ubi.ubi /home/ubi/*
-sudo cp /boot/config.txt /boot/config.bak
-sudo sed s/enable_uart=0/enable_uart=1/ </boot/config.bak > /boot/config.txt
