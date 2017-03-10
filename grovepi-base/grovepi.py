@@ -1,5 +1,5 @@
 # grovepi.py
-# v1.1, with Joe M additions
+# v1.5, with Joe M additions
 # This file provides the basic functions for using the GrovePi
 #
 # Joe M: added things to a)make it faster, and b)do retries when i2c fails, as it seems to do sometimes,
@@ -7,7 +7,7 @@
 #
 # Karan Nayan, Joe Marshall
 # Initial Date: 13 Feb 2014
-# Last Updated: 23 Sep 2014
+# Last Updated: 10 Jan 2017
 # 
 #
 # http://www.dexterindustries.com/
@@ -265,7 +265,7 @@ def heartRead(pin):
             return [-1,-1]
     _read_heart=True
     write_i2c_block(address,pulse_read_cmd+[pin,unused,unused])
-    data_back=bus.read_i2c_block_data(address,1)[0:3]
+    data_back=read_i2c_block(address)[0:4]
     if data_back[0]!=255:
       return [data_back[1]==1,data_back[3]*256+data_back[2]]
     else:
