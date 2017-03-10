@@ -25,10 +25,62 @@
 import logging
 log = logging.getLogger(__name__)
 
-import os, sys, re, errno, importlib
+import os, sys, re, errno, importlib,fcntl,select,time
 from binascii import hexlify
 
-PATH = re.compile(r'^([a-z]+)(?::|)([a-zA-Z0-9]+|)(?::|)([a-zA-Z0-9]+|)$')
+PATH = re.compile(r'^([a-z0-9]+)(?::|)([a-zA-Z0-9]+|)(?::|)([a-zA-Z0-9]+|)$')
+
+class I2C(object):
+    TYPE = "I2C"
+    
+    @classmethod
+    def find(cls,path):
+        match = PATH.match(path)
+        if match and match.group(1) == "i2c" and match.group(3)=="pn532":
+           return ["i2c",["pn532"],True]
+    
+    def __init__(self,dev):
+        self.i2cDev=None
+    
+    def open(self):
+        self.close()
+        self.i2cDev=os.open("/dev/i2c-1",os.O_RDWR)
+
+    def write(self,frame):
+        fcntl.ioctl(self.i2cDev,0x0703,0x24)
+#        while True:
+#          rd=os.read(self.i2cDev,1)
+#          if ord(rd[0])&1==1:
+#            break
+        os.write(self.i2cDev,frame)
+
+    def read(self,timeout=100):
+        fcntl.ioctl(self.i2cDev,0x0703,0x24)
+        endTime=time.time()+timeout*0.001
+        while True:
+          rd=os.read(self.i2cDev,1024)
+          buf = bytearray()
+          buf.extend(rd)
+          if buf[0]&1 == 1:
+            if buf[1:].startswith(bytearray.fromhex("0000ff00ff")):
+                return buf[1:7]
+            else:
+               bufLength=buf[4]
+               if bufLength==0xff:
+                 bufLength= buf[6]<<8 | buf[7]
+                 return buf[1:bufLength+11]
+               else:
+                return buf[1:bufLength+8]
+              
+            return buf[1:]
+          if time.time()>endTime:
+            break
+        return ""
+        
+    def close(self):
+        if self.i2cDev!=None:
+            os.close(self.i2cDev)
+    
 
 class TTY(object):
     TYPE = "TTY"
@@ -42,7 +94,7 @@ class TTY(object):
             return None
         
         match = PATH.match(path)
-        
+
         if match and match.group(1) == "tty":
             import termios
             if re.match(r'^\D+\d+$', match.group(2)):
