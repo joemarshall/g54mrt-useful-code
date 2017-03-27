@@ -59,8 +59,64 @@ ACCEL_SCALE=2
 
 is6axisInitialised=False
 
+def _initv2(scale):
+    global SIX_AXIS_ACCEL_ADDR
+    global OUT_X_L_M
+    global OUT_X_H_M
+    global OUT_Y_L_M
+    global OUT_Y_H_M
+    global OUT_Z_L_M
+    global OUT_Z_H_M
+    global OUT_X_L_A
+    global OUT_X_H_A
+    global OUT_Y_L_A
+    global OUT_Y_H_A
+    global OUT_Z_L_A
+    global OUT_Z_H_A
+    SIX_AXIS_ACCEL_ADDR=SIX_AXIS_MAG_ADDR
+    OUT_X_L_M       = 0x08
+    OUT_X_H_M       = 0x09
+    OUT_Y_L_M       = 0x0A
+    OUT_Y_H_M       = 0x0B
+    OUT_Z_L_M       = 0x0C
+    OUT_Z_H_M       = 0x0D    
+    OUT_X_L_A       = 0x28
+    OUT_X_H_A       = 0x29
+    OUT_Y_L_A       = 0x2A
+    OUT_Y_H_A       = 0x2B
+    OUT_Z_L_A       = 0x2C
+    OUT_Z_H_A       = 0x2D
+    CTRL_REG0       = 0x1F
+    CTRL_REG1       = 0x20
+    CTRL_REG2       = 0x21
+    CTRL_REG3       = 0x22
+    CTRL_REG4       = 0x23
+    CTRL_REG5       = 0x24
+    CTRL_REG6       = 0x25
+    CTRL_REG7       = 0x26
+    MAG_SCALE_2 	= 0x00 #full-scale is +/-2Gauss
+    MAG_SCALE_4 	= 0x20 #+/-4Gauss
+    MAG_SCALE_8 	= 0x40 #+/-8Gauss
+    MAG_SCALE_12 	= 0x60 #+/-12Gauss
+
+    ACCELE_SCALE 	= 2
+
+    LSM303_write(0x57, CTRL_REG1)               # 0x57 = ODR=50hz, all accel axes on
+    LSM303_write((3<<6)|(0<<3), CTRL_REG2)      # set full-scale
+    LSM303_write(0x00, CTRL_REG3)           # no interrupt
+    LSM303_write(0x00, CTRL_REG4)           # no interrupt
+    LSM303_write((4<<2), CTRL_REG5)             # 0x10 = mag 50Hz output rate
+    LSM303_write(MAG_SCALE_2, CTRL_REG6)        # magnetic scale = +/-1.3Gauss
+    LSM303_write(0x00, CTRL_REG7)           # 0x00 = continouous conversion mode
+
 def init6Axis(scale=2):
     global ACCEL_SCALE
+    try:
+        LSM303_write(0x27,CTRL_REG1_A)
+    except IOError,e:
+        # check for an LSM303D (different I2c interface and setup)
+        _initv2(scale)
+        return
     LSM303_write(0x27, CTRL_REG1_A)
     if scale==8 or scale==4:
         LSM303_write((0x00 | (fs-fs/2-1)<<4), CTRL_REG4_A) # set full-scale
@@ -177,5 +233,5 @@ def LSM303_read( address):
 if __name__=="__main__":
     init6Axis()
     while True:
-        print(getOrientation())
+        print(getAccel(),getOrientation())
         time.sleep(0.5)
