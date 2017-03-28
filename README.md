@@ -8,6 +8,7 @@ grovepi-base                The base classes for talking to the grovepi,
  
 sensors1                    Code and sample data referred to in sensors 1 lecture
 sensors2                    Code and sample data referred to in sensors 2 lecture
+sensors3                    Code referred to in sensors 3 lecture
 sensors4                    Code and sample data referred to in sensors 4 lecture
 
 code-requests               Code which we wrote when people wanted to do particular things
