@@ -4,5 +4,5 @@
 echo "Git changed - copying code across"
 sudo chown pi.pi -R /home/pi/g54mrt-useful-code
 sudo cp /home/pi/g54mrt-useful-code/startup-scripts/rc.local /etc/rc.local
-sudo cp -r /home/pi/g54mrt-useful-code/grovepi-base/* /home/ubi/
-sudo chown ubi.ubi /home/ubi/*
+cd /home/ubi
+sudo -u ubi bash ./getlatest.sh
