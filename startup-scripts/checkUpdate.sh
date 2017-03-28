@@ -8,10 +8,16 @@ do
   sleep 1
 done
 
+set -o pipefail
 #pull any changes from git
 if git pull | grep -q "up-to-date"; then
 echo "no changes"
 else
+  if $?>0; then
+    cd ~
+    sudo rm -rf g54mrt-useful-code
+    git clone https://github.com/joemarshall/g54mrt-useful-code.git
+  fi
 # run things that need to be run after this git update
 /bin/bash /home/pi/g54mrt-useful-code/startup-scripts/afterUpdate.sh
 fi
