@@ -15,10 +15,11 @@ echo "no changes"
 else
     if [ $? -ne 0 ]
     then
-        # error doing git pull
+        # error doing git pull - re-copy repository
         cd ~
         mkdir tmp
         cd tmp
+        rm -rf g54mrt-useful-code
         git clone https://github.com/joemarshall/g54mrt-useful-code.git
         if [$? -eq 0 ]
         then
