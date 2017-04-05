@@ -16,16 +16,14 @@ else
     if [ $? -ne 0 ]
     then
         # error doing git pull - re-copy repository
-        cd ~
-        mkdir tmp
-        cd tmp
+        cd /tmp
         rm -rf g54mrt-useful-code
         git clone https://github.com/joemarshall/g54mrt-useful-code.git
-        if [$? -eq 0 ]
+        if [ $? -eq 0 ]
         then
           cd ~
           rm -rf g54mrt-useful-code
-          mv tmp/g54mrt-useful-code ./g54mrt-useful-code
+          mv /tmp/g54mrt-useful-code ./g54mrt-useful-code
         fi
     fi
 # run things that need to be run after this git update
