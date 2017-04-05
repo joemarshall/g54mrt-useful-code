@@ -15,9 +15,17 @@ echo "no changes"
 else
     if [ $? -ne 0 ]
     then
+        # error doing git pull
         cd ~
-        sudo rm -rf g54mrt-useful-code
+        mkdir tmp
+        cd tmp
         git clone https://github.com/joemarshall/g54mrt-useful-code.git
+        if [$? -eq 0 ]
+        then
+          cd ~
+          rm -rf g54mrt-useful-code
+          mv tmp/g54mrt-useful-code ./g54mrt-useful-code
+        fi
     fi
 # run things that need to be run after this git update
 /bin/bash /home/pi/g54mrt-useful-code/startup-scripts/afterUpdate.sh
