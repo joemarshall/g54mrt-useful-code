@@ -9,5 +9,7 @@ then
     sudo cp /home/pi/g54mrt-useful-code/startup-scripts/rc.local /etc/rc.local
     sudo cp /home/pi/g54mrt-useful-code/startup-scripts/showIP.py /home/pi/showIP.py
 fi
-cd /home/ubi
-sudo -u ubi bash ./getlatest.sh
+cd /home/g54mrt
+sudo cp /home/pi/g54mrt-useful-code/grovepi-base/getlatest.sh .
+sudo chown g54mrt.g54mrt /home/g54mrt/getlatest.sh
+sudo -u g54mrt bash ./getlatest.sh
