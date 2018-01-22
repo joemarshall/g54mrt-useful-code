@@ -48,14 +48,12 @@ class I2C(object):
 
     def write(self,frame):
         fcntl.ioctl(self.i2cDev,0x0703,0x24)
-#        while True:
-#          rd=os.read(self.i2cDev,1)
-#          if ord(rd[0])&1==1:
-#            break
+        time.sleep(0.001)
         os.write(self.i2cDev,frame)
 
     def read(self,timeout=100):
         fcntl.ioctl(self.i2cDev,0x0703,0x24)
+        time.sleep(0.001)
         endTime=time.time()+timeout*0.001
         while True:
           rd=os.read(self.i2cDev,1024)
@@ -63,6 +61,7 @@ class I2C(object):
           buf.extend(rd)
           if buf[0]&1 == 1:
             if buf[1:].startswith(bytearray.fromhex("0000ff00ff")):
+#                print("ACK")
                 return buf[1:7]
             else:
                bufLength=buf[4]
@@ -70,12 +69,12 @@ class I2C(object):
                  bufLength= buf[6]<<8 | buf[7]
                  return buf[1:bufLength+11]
                else:
-                return buf[1:bufLength+8]
-              
+                 return buf[1:bufLength+8]              
             return buf[1:]
           if time.time()>endTime:
+            print("timeout")
             break
-        return ""
+        return ""        
         
     def close(self):
         if self.i2cDev!=None:
