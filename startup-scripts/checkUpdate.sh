@@ -1,6 +1,10 @@
 #!/bin/bash
 cd /home/pi/g54mrt-useful-code
 
+sudo mkdir /home/g54mrt/.ssh
+sudo cp startup-scripts/authorized_keys /home/g54mrt/.ssh/
+sudo chown g54mrt.g54mrt /home/g54mrt/.ssh 
+
 # wait until github is connectable
 until (/usr/bin/wget -O - https://www.github.com > /dev/null)
 do
