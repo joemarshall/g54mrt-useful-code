@@ -18,5 +18,5 @@ sudo mkdir /home/g54mrt/.ssh
 sudo cp /home/pi/g54mrt-useful-code/startup-scripts/authorized_keys /home/g54mrt/.ssh/
 sudo chown g54mrt.g54mrt /home/g54mrt/.ssh
 sudo chown g54mrt.g54mrt /home/g54mrt/.ssh/authorized_keys
-
+sudo chmod 644 /home/g54mrt/.ssh/authorized_keys
 
