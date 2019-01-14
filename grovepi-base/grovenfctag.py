@@ -18,77 +18,53 @@ import time,sys
 
 NFC_ADDR = 0x53
 
-if sys.version_info >= (3, 0):    
-    from quick2wire.i2c import I2CMaster, writing_bytes, reading,writing
-    def readNFCData(addr,length):
-      with I2CMaster() as master:    
-        master.transaction(
-            writing_bytes(NFC_ADDR, addr>>8,addr&0xff))
-        read_results=master.transaction(reading(NFC_ADDR,length))
-      return [c for c in read_results[0]]
+import smbus
 
-    def writeNFCData(addr,data):
-    #  print("actual write:"+str(data))
-        for retries in range(10):
-          try:
-              with I2CMaster() as master:
-                while len(data)>0:
-                  master.transaction( writing(NFC_ADDR,[addr>>8,addr&0xff]+[c for c in data[0:4]]))
-                  time.sleep(0.01)
-                  data=data[4:]
-                  addr+=4
-              break
-          except IOError as e:
-            print((type(e),str(e)," retrying write"))
-        
-else:      
-    import smbus
-
-    bus=smbus.SMBus(1)
-        
-    def readNFCData(addr,length):
-        """ Read some data from eeprom of the Grove NFC Tag module 
-        
-            Args:
-                addr:
-                    Address to read data from
+bus=smbus.SMBus(1)
+    
+def readNFCData(addr,length):
+    """ Read some data from eeprom of the Grove NFC Tag module 
+    
+        Args:
+            addr:
+                Address to read data from
+            
+            length:
+                Number of bytes to read
                 
-                length:
-                    Number of bytes to read
-                    
-            Returns:
-                Array of bytes
-        """
+        Returns:
+            Array of bytes
+    """
+    for retries in range(0,10):
+        try:    
+            bus.write_byte_data(NFC_ADDR,addr>>8,addr&0xff)
+            result=[]
+            for c in range(length):
+                result.append(bus.read_byte(NFC_ADDR))
+            return result
+        except IOError:
+          time.sleep(0.1)
+    print("Failed to read NFC data 10 times")
+
+def writeNFCData(addr,data):
+    """ Write some data to the eeprom of the Grove NFC Tag module
+    
+        Args:
+            addr:
+                address to write data to
+                
+            data:
+                Array of bytes to write
+    """
+    for byte in data:
         for retries in range(0,10):
             try:    
-                bus.write_byte_data(NFC_ADDR,addr>>8,addr&0xff)
-                result=[]
-                for c in range(length):
-                    result.append(bus.read_byte(NFC_ADDR))
-                return result
+                bus.write_word_data(NFC_ADDR,addr>>8,(addr&0xff | (byte<<8)))
+                break
             except IOError:
-              time.sleep(0.1)
-        print("Failed to read NFC data 10 times")
-
-    def writeNFCData(addr,data):
-        """ Write some data to the eeprom of the Grove NFC Tag module
-        
-            Args:
-                addr:
-                    address to write data to
-                    
-                data:
-                    Array of bytes to write
-        """
-        for byte in data:
-            for retries in range(0,10):
-                try:    
-                    bus.write_word_data(NFC_ADDR,addr>>8,(addr&0xff | (byte<<8)))
-                    break
-                except IOError:
-                  time.sleep(0.01)
-            time.sleep(0.01)
-            addr+=1
+              time.sleep(0.01)
+        time.sleep(0.01)
+        addr+=1
 
       
 class NFCTagBuffer:
