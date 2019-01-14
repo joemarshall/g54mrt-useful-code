@@ -35,7 +35,7 @@ from nfc.tag import Tag, TagCommandError
 import nfc.clf
 
 TIMEOUT_ERROR, INVALID_SECTOR_ERROR, \
-    INVALID_PAGE_ERROR, INVALID_RESPONSE_ERROR = range(4)
+    INVALID_PAGE_ERROR, INVALID_RESPONSE_ERROR = list(range(4))
 
 class Type2TagCommandError(TagCommandError):
     """Type 2 Tag specific exceptions. Sets 
@@ -64,7 +64,7 @@ def read_tlv(memory, offset, skip_bytes):
     if tlv_l == 0xFF:
         tlv_l, offset = (unpack(">H", memory[offset:offset+2])[0], offset+2)
     tlv_v = bytearray(tlv_l)
-    for i in xrange(tlv_l):
+    for i in range(tlv_l):
         while (offset + i) in skip_bytes:
             offset += 1
         tlv_v[i] = memory[offset+i]
@@ -165,11 +165,11 @@ class Type2Tag(Tag):
                 elif tlv_t == 0x01:
                     try: lock_bytes = get_lock_byte_range(tlv_v)
                     except IndexError: return None
-                    skip_bytes.update(range(*lock_bytes.indices(0x100000)))
+                    skip_bytes.update(list(range(*lock_bytes.indices(0x100000))))
                 elif tlv_t == 0x02:
                     try: rsvd_bytes = get_rsvd_byte_range(tlv_v)
                     except IndexError: return None
-                    skip_bytes.update(range(*rsvd_bytes.indices(0x100000)))
+                    skip_bytes.update(list(range(*rsvd_bytes.indices(0x100000))))
                 elif tlv_t == 0x03:
                     ndef = tlv_v; break
                 elif tlv_t == 0xFE:
@@ -214,7 +214,7 @@ class Type2Tag(Tag):
             # ndef data into the memory image, but jump over skip
             # bytes. If space permits, write a terminator tlv.
             offset += 2 if len(data) < 255 else 4
-            for i in xrange(len(data)):
+            for i in range(len(data)):
                 while offset + i in skip_bytes:
                     offset += 1
                 tag_memory[offset+i] = data[i]
@@ -281,7 +281,7 @@ class Type2Tag(Tag):
             if same_data > 0:
                 lines.append(lprint(data_line_fmt, this_data, page))
             
-        for i in xrange(4, stop if stop is not None else 0x40000):
+        for i in range(4, stop if stop is not None else 0x40000):
             try:
                 self.sector_select(i>>8)
                 this_data = self.read(i)[0:4]
@@ -348,7 +348,7 @@ class Type2Tag(Tag):
             if wipe is not None:
                 memory_size = memory[14] * 8 + 16
                 skip_bytes = self.ndef._skip_bytes
-                for offset in xrange(offset + 3, memory_size):
+                for offset in range(offset + 3, memory_size):
                     if offset not in skip_bytes:
                         memory[offset] = wipe & 0xFF
             memory.synchronize()
@@ -602,7 +602,7 @@ class Type2TagMemoryReader(object):
     def __setitem__(self, key, value):
         self.__getitem__(key)
         if isinstance(key, slice):
-            if len(value) != len(xrange(*key.indices(0x100000))):
+            if len(value) != len(range(*key.indices(0x100000))):
                 msg = "{cls} requires item assignment of identical length"
                 raise ValueError(msg.format(cls=self.__class__.__name__))
         self._data_in_cache[key] = value
@@ -615,7 +615,7 @@ class Type2TagMemoryReader(object):
     def _read_from_tag(self, stop):
         start = len(self)
         try:
-            for i in xrange((start>>4)<<4, stop, 16):
+            for i in range((start>>4)<<4, stop, 16):
                 self._tag.sector_select(i>>10)
                 self._data_from_tag[i:i+16] = self._tag.read(i>>2)
                 self._data_in_cache[i:i+16] = self._data_from_tag[i:i+16]
@@ -624,7 +624,7 @@ class Type2TagMemoryReader(object):
 
     def _write_to_tag(self, stop):
         try:
-            for i in xrange(0, stop, 4):
+            for i in range(0, stop, 4):
                 data = self._data_in_cache[i:i+4]
                 if data != self._data_from_tag[i:i+4]:
                     self._tag.sector_select(i>>10)

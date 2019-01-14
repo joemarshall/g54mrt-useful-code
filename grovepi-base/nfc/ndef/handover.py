@@ -27,11 +27,11 @@ log = logging.getLogger(__name__)
 
 import io
 import struct
-from record import Record, RecordList
-from message import Message
-from error import *
-from bt_record import BluetoothConfigRecord
-from wifi_record import WifiConfigRecord
+from .record import Record, RecordList
+from .message import Message
+from .error import *
+from .bt_record import BluetoothConfigRecord
+from .wifi_record import WifiConfigRecord
 
 def parse_carrier_structure(ac_record, records):
     carrier_record = records.get(ac_record.carrier_data_reference)
@@ -104,7 +104,7 @@ class HandoverRequestMessage(object):
 
         if version is not None:
             major, minor = [int(c) for c in version.split('.')]
-            if major != 1 or minor not in range(16):
+            if major != 1 or minor not in list(range(16)):
                 raise ValueError("version not in range 1.0 to 1.15")
             self._version = Version(chr(major << 4 | minor))
 
@@ -346,7 +346,7 @@ class HandoverSelectMessage(object):
                 if carrier: self.carriers.append(carrier)
         elif version is not None:
             major, minor = [int(c) for c in version.split('.')]
-            if major != 1 or minor not in range(16):
+            if major != 1 or minor not in list(range(16)):
                 raise ValueError("version not in range 1.0 to 1.15")
             self._version = Version(chr(major << 4 | minor))
         else:

@@ -28,8 +28,8 @@ log = logging.getLogger(__name__)
 
 import io
 import struct
-from record import Record
-from error import DecodeError, EncodeError
+from .record import Record
+from .error import DecodeError, EncodeError
 
 VERSION1     = "\x10\x4A"
 CREDENTIAL   = "\x10\x0e"
@@ -64,10 +64,10 @@ crypt_type_names = {
     }
 
 auth_type_keys = \
-    dict([(v,k) for k,v in auth_type_names.iteritems()])
+    dict([(v,k) for k,v in auth_type_names.items()])
 
 crypt_type_keys = \
-    dict([(v,k) for k,v in crypt_type_names.iteritems()])
+    dict([(v,k) for k,v in crypt_type_names.items()])
     
 class WifiConfigRecord(Record):
     def __init__(self, record=None):
@@ -136,7 +136,7 @@ class WifiConfigRecord(Record):
     @version.setter
     def version(self, value):
         try:
-            major, minor = map(int, value.split('.'))
+            major, minor = list(map(int, value.split('.')))
         except:
             raise TypeError("not a 'major.minor' version string")
         if major < 2 or major > 15:
@@ -315,7 +315,7 @@ class WifiPasswordRecord(Record):
     @version.setter
     def version(self, value):
         try:
-            major, minor = map(int, value.split('.'))
+            major, minor = list(map(int, value.split('.')))
         except:
             raise TypeError("not a 'major.minor' version string")
         if major < 2 or major > 15:

@@ -29,8 +29,8 @@ the connection-less and connection-mode transport facilities of LLCP.
 import logging
 log = logging.getLogger(__name__)
 
-from socket import Socket
-from llc import LOGICAL_DATA_LINK, DATA_LINK_CONNECTION
-from err import *
-from opt import *
+from .socket import Socket
+from .llc import LOGICAL_DATA_LINK, DATA_LINK_CONNECTION
+from .err import *
+from .opt import *
 

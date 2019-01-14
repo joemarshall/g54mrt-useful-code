@@ -54,6 +54,6 @@ def isTimeOut():
   return False
 
 if __name__=="__main__":
-  print waitForTag(200)
+  print(waitForTag(200))
 
 

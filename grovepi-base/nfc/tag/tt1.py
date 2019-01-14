@@ -37,7 +37,7 @@ from nfc.tag import Tag, TagCommandError
 import nfc.clf
 
 CHECKSUM_ERROR, RESPONSE_ERROR, WRITE_ERROR, \
-    BLOCK_ERROR, SECTOR_ERROR = range(1, 6)
+    BLOCK_ERROR, SECTOR_ERROR = list(range(1, 6))
 
 class Type1TagCommandError(TagCommandError):
     """Type 1 Tag specific exceptions. Sets 
@@ -67,7 +67,7 @@ def read_tlv(memory, offset, skip_bytes):
     if tlv_l == 0xFF:
         tlv_l, offset = (unpack(">H", memory[offset:offset+2])[0], offset+2)
     tlv_v = bytearray(tlv_l)
-    for i in xrange(tlv_l):
+    for i in range(tlv_l):
         while (offset + i) in skip_bytes:
             offset += 1
         tlv_v[i] = memory[offset+i]
@@ -169,10 +169,10 @@ class Type1Tag(Tag):
                     pass
                 elif tlv_t == 0x01:
                     lock_bytes = get_lock_byte_range(tlv_v)
-                    skip_bytes.update(range(*lock_bytes.indices(0x800)))
+                    skip_bytes.update(list(range(*lock_bytes.indices(0x800))))
                 elif tlv_t == 0x02:
                     rsvd_bytes = get_rsvd_byte_range(tlv_v)
-                    skip_bytes.update(range(*rsvd_bytes.indices(0x800)))
+                    skip_bytes.update(list(range(*rsvd_bytes.indices(0x800))))
                 elif tlv_t == 0x03:
                     ndef = tlv_v; break
                 elif tlv_t == 0xFE or tlv_t is None:
@@ -205,7 +205,7 @@ class Type1Tag(Tag):
             # ndef data into the memory image, but jump over skip
             # bytes.
             offset += 2 if len(data) < 255 else 4
-            for i in xrange(len(data)):
+            for i in range(len(data)):
                 while offset + i in skip_bytes: offset += 1
                 tag_memory[offset+i] = data[i]
             # Write a terminator tlv if space permits. We may have to
@@ -281,7 +281,7 @@ class Type1Tag(Tag):
 
         lines.append("HR0={0:02X}h, HR1={1:02X}h".format(*hrom))
         lines.append("  0: {0} ({1})".format(oprint(data[0:8]), txt[0]))
-        for i in xrange(8, 104, 8):
+        for i in range(8, 104, 8):
             lines.append(lprint("{0:3}: {1} |{2}|", data[i:i+8], i//8))
         lines.append(" 13: {0} ({1})".format(oprint(data[104:112]), txt[1]))
         lines.append(" 14: {0} ({1})".format(oprint(data[112:120]), txt[2]))
@@ -301,7 +301,7 @@ class Type1Tag(Tag):
             if same_data > 0:
                 lines.append(lprint(data_line_fmt, this_data, page))
             
-        for i in xrange(16, stop if stop is not None else 256):
+        for i in range(16, stop if stop is not None else 256):
             try:
                 this_data = self.read_block(i)
                 if stop is None:
@@ -465,7 +465,7 @@ class Type1TagMemoryReader(object):
     def __setitem__(self, key, value):
         self.__getitem__(key)
         if isinstance(key, slice):
-            if len(value) != len(xrange(*key.indices(0x100000))):
+            if len(value) != len(range(*key.indices(0x100000))):
                 msg = "{cls} requires item assignment of identical length"
                 raise ValueError(msg.format(cls=self.__class__.__name__))
         self._data_in_cache[key] = value
@@ -497,13 +497,13 @@ class Type1TagMemoryReader(object):
         try:
             hr0 = self._header_rom[0]
             if hr0 >> 4 == 1 and hr0 & 0x0F != 1:
-                for i in xrange(0, stop, 8):
+                for i in range(0, stop, 8):
                     data = self._data_in_cache[i:i+8]
                     if data != self._data_from_tag[i:i+8]:
                         self._tag.write_block(i//8, data)
                         self._data_from_tag[i:i+8] = data
             else:
-                for i in xrange(0, stop):
+                for i in range(0, stop):
                     data = self._data_in_cache[i]
                     if data != self._data_from_tag[i]:
                         self._tag.write_byte(i, data)

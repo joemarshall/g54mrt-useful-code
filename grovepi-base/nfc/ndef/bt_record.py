@@ -28,8 +28,8 @@ log = logging.getLogger(__name__)
 import io
 import struct
 from uuid import UUID
-from record import Record
-from error import *
+from .record import Record
+from .error import *
 
 class BluetoothConfigRecord(Record):
     def __init__(self, record=None):
@@ -46,7 +46,7 @@ class BluetoothConfigRecord(Record):
     def data(self):
         f = io.BytesIO()
         f.write(str(bytearray(reversed(self._bdaddr))))
-        for key, value in self.eir.iteritems():
+        for key, value in self.eir.items():
             f.write(chr(1 + len(value)) + chr(key) + str(value))
         oob_length = 2 + f.tell()
         f.seek(0,0)
@@ -219,7 +219,7 @@ class BluetoothConfigRecord(Record):
             try: service_class = service_class_uuid_map[service_class_uuid]
             except KeyError: service_class = service_class_uuid
             lines.append(("service class", service_class))
-        for key, value in self.eir.items():
+        for key, value in list(self.eir.items()):
             if key not in (3, 5, 7, 8, 9, 13, 14, 15):
                 lines.append(("EIR 0x%02x" % key, repr(value)))
         

@@ -107,7 +107,7 @@ class Chipset(object):
         0x632E: "CIU_RFT3",
         0x632F: "CIU_RFT4",
     }
-    REGBYNAME = {v: k for k, v in REG.iteritems()}
+    REGBYNAME = {v: k for k, v in REG.items()}
 
     class Error(Exception):
         def __init__(self, errno, strerr):
@@ -686,7 +686,7 @@ class Device(device.Device):
         except AssertionError as error:
             raise ValueError(str(error))
 
-        nfcf_params = bytearray(range(18))
+        nfcf_params = bytearray(list(range(18)))
         nfca_params = target.sens_res + target.sdd_res[1:4] + target.sel_res
         self.log.debug("nfca_params %s", hexlify(nfca_params))
 
@@ -777,7 +777,7 @@ class Device(device.Device):
             ("CIU_Command",   0b00000000), # Idle command
             ("CIU_FIFOLevel", 0b10000000), # clear fifo
         ]
-        regs.extend(zip(25*["CIU_FIFOData"], nfca_params+nfcf_params+"\0"))
+        regs.extend(list(zip(25*["CIU_FIFOData"], nfca_params+nfcf_params+"\0")))
         regs.append(("CIU_Command", 0b00000001)) # Configure command
         self.chipset.write_register(*regs)
         regs = [
@@ -944,7 +944,7 @@ class Device(device.Device):
             ("CIU_DivIRq",    0b01111111), # clear interrupt request bits
         ]
         if data is not None:
-            regs.extend(zip(len(data)*["CIU_FIFOData"], data))
+            regs.extend(list(zip(len(data)*["CIU_FIFOData"], data)))
             regs.append(("CIU_BitFraming", 0b10000000)) # StartSend (b7=1)
         self.chipset.write_register(*regs)
         
@@ -994,7 +994,7 @@ class Device(device.Device):
         for page in pages:
             base = (0x6331, 0x6301, 0x6311, 0x6321)[page]
             regs = set(self.chipset.REG)
-            regs = sorted(regs.intersection(range(base, base+16)))
+            regs = sorted(regs.intersection(list(range(base, base+16))))
             vals = self.chipset.read_register(*regs)
             regs = [self.chipset.REG[r] for r in regs]
             for r, v in zip(regs, vals):

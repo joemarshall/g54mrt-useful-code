@@ -33,7 +33,7 @@ log = logging.getLogger(__name__)
 connection_mode_pdu_types = (4, 5, 6, 7, 8, 12, 13, 14)
 
 class Parameter:
-    VERSION, MIUX, WKS, LTO, RW, SN, OPT, SDREQ, SDRES = range(1, 10)
+    VERSION, MIUX, WKS, LTO, RW, SN, OPT, SDREQ, SDRES = list(range(1, 10))
 
 class ProtocolDataUnit(object):
     Symmetry = 0b0000
@@ -223,7 +223,7 @@ class AggregatedFrameIterator(object):
         self._aggregate = aggregate
         self._current = 0
 
-    def next(self):
+    def __next__(self):
         if self._current == len(self._aggregate):
             raise StopIteration
         self._current += 1
@@ -552,9 +552,9 @@ class ReceiveNotReady(ProtocolDataUnit):
 
 
 if __name__ == '__main__':
-    print "--------------------------"
-    print "- running positive tests -"
-    print "--------------------------"
+    print("--------------------------")
+    print("- running positive tests -")
+    print("--------------------------")
     test = (
         ( Symmetry(), 
           "\x00\x00" ),
@@ -583,25 +583,25 @@ if __name__ == '__main__':
         )
 
     for p, s in test:
-        print ("failed", "passed")[p.to_string() == s and len(p) == len(s)],
-        print ProtocolDataUnit.from_string(s)
+        print(("failed", "passed")[p.to_string() == s and len(p) == len(s)], end=' ')
+        print(ProtocolDataUnit.from_string(s))
 
-    print 
+    print() 
     for p, s in test:
         b0, b1 = struct.unpack("!BB", s[0:2])
         b0 |= 0x80; b1 |= 0x01
         s = struct.pack("!BB", b0, b1) + s[2:]
         s = str(ProtocolDataUnit.from_string(s))
-        print ("failed", "passed")[s.startswith(" 1 -> 32")], s
+        print(("failed", "passed")[s.startswith(" 1 -> 32")], s)
 
-    print
+    print()
     agf = AggregatedFrame()
     for p, s in test:
         agf.append(p)
-    print agf
+    print(agf)
     for p in agf:
-        print p
+        print(p)
 
     pdu1 = Disconnect(0,0)
     pdu2 = Disconnect(0,0)
-    print repr(pdu1), "==", repr(pdu2), "->", pdu1 == pdu2
+    print(repr(pdu1), "==", repr(pdu2), "->", pdu1 == pdu2)

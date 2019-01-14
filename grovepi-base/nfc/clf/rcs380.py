@@ -46,6 +46,7 @@ listen_dep  yes      Only passive communication mode
 """
 
 import logging
+from functools import reduce
 log = logging.getLogger(__name__)
 
 import os
@@ -108,7 +109,7 @@ class CommunicationError:
                0x00000800: "TRANSMIT_TIMEOUT_ERROR",
                0x80000000: "RECEIVE_LENGTH_ERROR"
                }
-    str2err = dict([(v, k) for k, v in err2str.iteritems()])
+    str2err = dict([(v, k) for k, v in err2str.items()])
     
     def __init__(self, status_bytes):
         self.errno = struct.unpack('<L', str(status_bytes))[0]
@@ -226,7 +227,7 @@ class Chipset(object):
                 "check_sof", "add_eof", "check_eof", "rfu", "deaf_time",
                 "continuous_receive_mode", "min_len_for_crm",
                 "type_1_tag_rrdd", "rfca", "guard_time")
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             data.extend(bytearray([KEYS.index(key), int(value)]))
         data = self.send_command(0x02, data, 100)
         if data and data[0] != 0:
@@ -260,7 +261,7 @@ class Chipset(object):
         data = bytearray() if data is None else bytearray(data)
         KEYS = ("send_timeout_time_unit", "rf_off_error",
                 "continuous_receive_mode")
-        for key, value in kwargs.iteritems():
+        for key, value in kwargs.items():
             data.extend(bytearray([KEYS.index(key), int(value)]))
         data = self.send_command(0x42, bytearray(data), 100)
         if data and data[0] != 0:
@@ -389,7 +390,7 @@ class Device(device.Device):
                 if len(uid) > 4: uid = "\x88" + uid
                 if len(uid) > 8: uid = uid[0:4] + "\x88" + uid[4:]
                 self.chipset.in_set_protocol(add_crc=1, check_crc=1)
-                for i, sel_cmd in zip(range(0,len(uid),4),"\x93\x95\x97"):
+                for i, sel_cmd in zip(list(range(0,len(uid),4)),"\x93\x95\x97"):
                     sel_req = sel_cmd + "\x70" + uid[i:i+4]
                     sel_req.append(reduce(operator.xor, sel_req[2:6])) # BCC
                     log.debug("send SEL_REQ " + hexlify(sel_req))

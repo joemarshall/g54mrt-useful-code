@@ -34,7 +34,7 @@ else: # for Debian Wheezy (and thus Raspbian)
 import nfc.tag
 import nfc.clf
 
-RSP_LENGTH_ERROR, RSP_CODE_ERROR, TAG_IDM_ERROR, DATA_SIZE_ERROR = range(1, 5)
+RSP_LENGTH_ERROR, RSP_CODE_ERROR, TAG_IDM_ERROR, DATA_SIZE_ERROR = list(range(1, 5))
         
 class Type3TagCommandError(nfc.tag.TagCommandError):
     errno_str = {
@@ -200,7 +200,7 @@ class Type3Tag(nfc.tag.Tag):
             
             for i in range(1, last_block_number, attributes['nbr']):
                 last_block = min(i + attributes['nbr'], last_block_number)
-                block_list = range(i, last_block)
+                block_list = list(range(i, last_block))
                 try: data += self.tag.read_from_ndef_service(*block_list)
                 except Type3TagCommandError: return None
 
@@ -226,7 +226,7 @@ class Type3Tag(nfc.tag.Tag):
                 last_block = min(i + attributes['nbw'], last_block_number)
                 block_data = data[(i-1)*16:(last_block-1)*16]
                 self._tag.write_to_ndef_service(
-                    block_data, *range(i, last_block))
+                    block_data, *list(range(i, last_block)))
 
             attributes['writef'] = 0x00
             self._write_attribute_data(attributes)
@@ -295,7 +295,7 @@ class Type3Tag(nfc.tag.Tag):
         lines = list()
         last_data = None; same_data = 0
 
-        for i in xrange(0x10000):
+        for i in range(0x10000):
             try: this_data = self.read_without_encryption([sc], [BlockCode(i)])
             except Type3TagCommandError: break
             
@@ -366,7 +366,7 @@ class Type3Tag(nfc.tag.Tag):
         # To get the number of blocks that can be read in one command
         # we just try to read with an increasing number of blocks.
         for i in range(nmaxb + 1):
-            try: self.read_from_ndef_service(*range(0, i+1))
+            try: self.read_from_ndef_service(*list(range(0, i+1)))
             except Type3TagCommandError: break
         else: i = i + 1
         nbr = i
@@ -377,7 +377,7 @@ class Type3Tag(nfc.tag.Tag):
         data = bytearray()
         for i in range(nbr):
             data += self.read_from_ndef_service(i)
-            try: self.write_to_ndef_service(data, *range(0, i+1))
+            try: self.write_to_ndef_service(data, *list(range(0, i+1)))
             except Type3TagCommandError: break
         else: i = i + 1
         nbw = i
@@ -395,7 +395,7 @@ class Type3Tag(nfc.tag.Tag):
         # 8-bit integer provided. This could take a while.
         if wipe is not None:
             data = bytearray(chr(wipe) * 16)
-            for block in xrange(1, nmaxb + 1):
+            for block in range(1, nmaxb + 1):
                 self.write_to_ndef_service(data, block)
 
         return True
@@ -746,7 +746,7 @@ class Type3TagEmulation(nfc.tag.TagEmulation):
         service_list = cmd_data.pop(0) * [[None, None]]
         for i in range(len(service_list)):
             service_code = cmd_data[1] << 8 | cmd_data[0]
-            if not service_code in self.services.keys():
+            if not service_code in list(self.services.keys()):
                 return bytearray([0xFF, 0xA1])
             service_list[i] = [service_code, 0]
             del cmd_data[0:2]
@@ -793,7 +793,7 @@ class Type3TagEmulation(nfc.tag.TagEmulation):
         service_list = cmd_data.pop(0) * [[None, None]]
         for i in range(len(service_list)):
             service_code = cmd_data[1] << 8 | cmd_data[0]
-            if not service_code in self.services.keys():
+            if not service_code in list(self.services.keys()):
                 return bytearray([255, 0xA1])
             service_list[i] = [service_code, 0]
             del cmd_data[0:2]

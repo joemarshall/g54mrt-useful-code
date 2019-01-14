@@ -25,7 +25,7 @@
 import logging
 log = logging.getLogger(__name__)
 
-from record import Record
+from .record import Record
 
 class TextRecord(Record):
     """Wraps an NDEF Text record and provides access to the
@@ -94,7 +94,7 @@ class TextRecord(Record):
 
     @text.setter
     def text(self, value):
-        self._text = unicode(value)
+        self._text = str(value)
 
     @property
     def language(self):

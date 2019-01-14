@@ -25,10 +25,10 @@ log = logging.getLogger(__name__)
 
 import io
 import struct
-from record import Record
-from message import Message
-from uri_record import UriRecord
-from text_record import TextRecord
+from .record import Record
+from .message import Message
+from .uri_record import UriRecord
+from .text_record import TextRecord
 
 actions = ('default', "exec", "save", "edit")
 
@@ -76,9 +76,9 @@ class SmartPosterRecord(Record):
     def data(self):
         # encode smart poster payload as ndef message
         message = Message(UriRecord(self._uri))
-        for lang, text in self.title.iteritems():
+        for lang, text in self.title.items():
             message.append(TextRecord(text=text, language=lang))
-        for image_type, image_data in self.icons.iteritems():
+        for image_type, image_data in self.icons.items():
             message.append(Record("image/"+image_type, data=image_data))
         if self._action >= 0:
             message.append(Record("urn:nfc:wkt:act", data=chr(self._action)))

@@ -43,6 +43,7 @@ listen_dep  yes
 
 """
 import logging
+from functools import reduce
 log = logging.getLogger(__name__)
 
 import os
@@ -114,7 +115,7 @@ class Device(nfc.clf.device.Device):
                 uid = target.sel_req
                 if len(uid) > 4: uid = "\x88" + uid
                 if len(uid) > 8: uid = uid[0:4] + "\x88" + uid[4:]
-                for i, sel_cmd in zip(range(0,len(uid),4),"\x93\x95\x97"):
+                for i, sel_cmd in zip(list(range(0,len(uid),4)),"\x93\x95\x97"):
                     sel_req = sel_cmd + "\x70" + uid[i:i+4]
                     sel_req.append(reduce(operator.xor, sel_req[2:6])) # BCC
                     log.debug("send SEL_REQ " + hexlify(sel_req))

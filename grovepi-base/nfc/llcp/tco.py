@@ -33,9 +33,9 @@ import errno
 from types import *
 
 # local imports
-from pdu import *
-from err import *
-from opt import *
+from .pdu import *
+from .err import *
+from .opt import *
 
 class TransmissionControlObject(object):
     class State(object):

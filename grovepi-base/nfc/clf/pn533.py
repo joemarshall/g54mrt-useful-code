@@ -179,7 +179,7 @@ class Device(pn53x.Device):
         try:
             self.chipset.read_register(0xA000) # check access
             for addr in range(0xA000, 0xA100, 64):
-                data = self.chipset.read_register(*range(addr, addr+64))
+                data = self.chipset.read_register(*list(range(addr, addr+64)))
                 self.eeprom.extend(data)
         except Chipset.Error:
             self.log.debug("no eeprom attached")

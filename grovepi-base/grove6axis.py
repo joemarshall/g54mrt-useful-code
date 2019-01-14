@@ -113,7 +113,7 @@ def init6Axis(scale=2):
     global ACCEL_SCALE
     try:
         LSM303_write(0x27,CTRL_REG1_A)
-    except IOError,e:
+    except IOError as e:
         # check for an LSM303D (different I2c interface and setup)
         _initv2(scale)
         return
@@ -239,5 +239,5 @@ def LSM303_read( address):
 if __name__=="__main__":
     init6Axis()
     while True:
-        print(getAccel(),getOrientation())
+        print((getAccel(),getOrientation()))
         time.sleep(0.5)

@@ -39,7 +39,7 @@ if sys.version_info >= (3, 0):
                   addr+=4
               break
           except IOError as e:
-            print(type(e),str(e)," retrying write")
+            print((type(e),str(e)," retrying write"))
         
 else:      
     import smbus
@@ -68,7 +68,7 @@ else:
                 return result
             except IOError:
               time.sleep(0.1)
-        print "Failed to read NFC data 10 times"
+        print("Failed to read NFC data 10 times")
 
     def writeNFCData(addr,data):
         """ Write some data to the eeprom of the Grove NFC Tag module
@@ -98,7 +98,7 @@ class NFCTagBuffer:
     
     # write data to the tag at current position and increment write position if needed
     def writeData(self, bytes):
-        print("write:"+str(bytes))
+        print(("write:"+str(bytes)))
         self.bytes.extend(bytes)
         self.flush(False)
         
@@ -125,10 +125,10 @@ class NFCTagBuffer:
             writeNFCData(0,[self.writePosition>>8,self.writePosition&0xff,0,0])
 
 if __name__=="__main__":
-    print (readNFCData(0,16))
+    print((readNFCData(0,16)))
     time.sleep(0.1)
     writeNFCData(0,[11,12,13,14,15,16,17,18,19])
     time.sleep(0.1)
-    print( readNFCData(0,16))
+    print(( readNFCData(0,16)))
 
 

@@ -25,7 +25,7 @@ log = logging.getLogger(__name__)
 
 import sys, os
 from binascii import hexlify
-from pyDes import triple_des, CBC
+from .pyDes import triple_des, CBC
 if sys.hexversion >= 0x020704F0:
     from struct import pack, unpack
 else: # for Debian Wheezy (and thus Raspbian)
@@ -38,15 +38,15 @@ from . import tt3
 def activate(clf, target):
     # http://www.sony.net/Products/felica/business/tech-support/list.html
     ic_code = target.sensf_res[10]
-    if ic_code in FelicaLite.IC_CODE_MAP.keys():
+    if ic_code in list(FelicaLite.IC_CODE_MAP.keys()):
         return FelicaLite(clf, target)
-    if ic_code in FelicaLiteS.IC_CODE_MAP.keys():
+    if ic_code in list(FelicaLiteS.IC_CODE_MAP.keys()):
         return FelicaLiteS(clf, target)
-    if ic_code in FelicaStandard.IC_CODE_MAP.keys():
+    if ic_code in list(FelicaStandard.IC_CODE_MAP.keys()):
         return FelicaStandard(clf, target)
-    if ic_code in FelicaMobile.IC_CODE_MAP.keys():
+    if ic_code in list(FelicaMobile.IC_CODE_MAP.keys()):
         return FelicaMobile(clf, target)
-    if ic_code in FelicaPlug.IC_CODE_MAP.keys():
+    if ic_code in list(FelicaPlug.IC_CODE_MAP.keys()):
         return FelicaPlug(clf, target)
     return None
 
@@ -192,7 +192,7 @@ class FelicaStandard(tt3.Type3Tag):
             # We've already processed the first are/service entry so
             # index starts from 1. The first non-existing index will
             # give us None and thus terminate the loop.
-            for i in xrange(1, 0x10000):
+            for i in range(1, 0x10000):
                 depth = len(area_stack)
                 area_or_service = self.search_service_code(i)
                 if area_or_service is None:
@@ -456,7 +456,7 @@ class FelicaLite(tt3.Type3Tag):
                 "IDM[8], PMM[8]", "SERVICE_CODE[2]",
                 "SYSTEM_CODE[2]", "CKV[2]", "CK1[8], CK2[8]",
                 "MEMORY_CONFIG")
-        config = dict(zip(range(0x80, 0x80+len(text)), text))
+        config = dict(list(zip(list(range(0x80, 0x80+len(text))), text)))
         
         for i in sorted(config.keys()):
             data = self.read_without_mac(i)
@@ -774,7 +774,7 @@ class FelicaLiteS(FelicaLite):
         lines = super(FelicaLiteS, self).dump()
         
         text = ("WCNT[3]", "MAC_A[8]", "STATE")
-        config = dict(zip(range(0x90, 0x90+len(text)), text))
+        config = dict(list(zip(list(range(0x90, 0x90+len(text))), text)))
         
         for i in sorted(config.keys()):
             try:

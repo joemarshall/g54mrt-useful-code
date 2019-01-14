@@ -114,7 +114,7 @@ class SnepServer(Thread):
                 else:
                     socket.send(snep_response[0:send_miu])
                     if socket.recv() == "\x10\x00\x00\x00\x00\x00":
-                        parts = range(send_miu, len(snep_response), send_miu)
+                        parts = list(range(send_miu, len(snep_response), send_miu))
                         for offset in parts:
                             fragment = snep_response[offset:offset+send_miu]
                             socket.send(fragment)

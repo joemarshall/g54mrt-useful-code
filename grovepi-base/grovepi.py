@@ -261,7 +261,7 @@ def heartRead(pin):
     global _read_heart
     if not _read_heart:
         if version()<[1,2,8]:
-            print "You need updated firmware for heart rate sensor"
+            print("You need updated firmware for heart rate sensor")
             return [-1,-1]
     _read_heart=True
     write_i2c_block(address,pulse_read_cmd+[pin,unused,unused])

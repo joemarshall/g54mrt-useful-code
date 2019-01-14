@@ -241,10 +241,10 @@ class USB(object):
                 log.debug("path matches {0!r}".format(regex.pattern))
                 if regex is usb_vid_pid:
                     match = [int(s.strip(':'), 16) for s in m.groups() if s]
-                    match = dict(zip(['idVendor', 'idProduct'], match))
+                    match = dict(list(zip(['idVendor', 'idProduct'], match)))
                 if regex is usb_bus_dev:
                     match = [int(s.strip(':'), 10) for s in m.groups() if s]
-                    match = dict(zip(['bus', 'address'], match))
+                    match = dict(list(zip(['bus', 'address'], match)))
                 if regex is usb_or_none:
                     match = dict()
                 break

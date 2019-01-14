@@ -33,12 +33,12 @@ import nfc.clf
 import nfc.dep
 
 # local imports
-from tco import *
-from pdu import *
-from err import *
-from opt import *
+from .tco import *
+from .pdu import *
+from .err import *
+from .opt import *
 
-RAW_ACCESS_POINT, LOGICAL_DATA_LINK, DATA_LINK_CONNECTION = range(3)
+RAW_ACCESS_POINT, LOGICAL_DATA_LINK, DATA_LINK_CONNECTION = list(range(3))
 
 wks_map = {
     "urn:nfc:sn:sdp" : 1,
@@ -137,7 +137,7 @@ class ServiceDiscovery(object):
     def __init__(self, llc):
         self.llc = llc
         self.snl = dict()
-        self.tids = range(256)
+        self.tids = list(range(256))
         self.resp = threading.Condition(self.llc.lock)
         self.sent = dict()
         self.sdreq = collections.deque()
@@ -235,7 +235,7 @@ class LogicalLinkController(object):
         
         miu = self.cfg['recv-miu']
         lto = self.cfg['send-lto']
-        wks = 1+sum(sorted([1<<sap for sap in self.snl.values() if sap < 15]))
+        wks = 1+sum(sorted([1<<sap for sap in list(self.snl.values()) if sap < 15]))
         pax = ParameterExchange(version=(1,1), miu=miu, lto=lto, wks=wks)
 
         if type(mac) == nfc.dep.Initiator:
@@ -341,7 +341,7 @@ class LogicalLinkController(object):
             else:
                 self.terminate(reason="local choice")
         except KeyboardInterrupt:
-            print # move to new line
+            print() # move to new line
             self.terminate(reason="local choice")
             raise KeyboardInterrupt
         except IOError:
@@ -373,7 +373,7 @@ class LogicalLinkController(object):
             else:
                 self.terminate(reason="local choice")
         except KeyboardInterrupt:
-            print # move to new line
+            print() # move to new line
             self.terminate(reason="local choice")
             raise KeyboardInterrupt
         except IOError:
