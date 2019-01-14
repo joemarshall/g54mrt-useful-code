@@ -1,5 +1,5 @@
 # grovepi.py
-# v1.1, with Joe M additions
+# v1.5, with Joe M additions
 # This file provides the basic functions for using the GrovePi
 #
 # Joe M: added things to a)make it faster, and b)do retries when i2c fails, as it seems to do sometimes,
@@ -7,7 +7,7 @@
 #
 # Karan Nayan, Joe Marshall
 # Initial Date: 13 Feb 2014
-# Last Updated: 23 Sep 2014
+# Last Updated: 10 Jan 2017
 # 
 #
 # http://www.dexterindustries.com/
@@ -51,6 +51,9 @@ version_cmd = [8]
 acc_xyz_cmd=[20]    #Accelerometer (+/- 1.5g) read
 rtc_getTime_cmd=[30]    #RTC get time
 dht_temp_cmd=[40]   #DHT Pro sensor temperature
+
+pulse_read_cmd=[23]
+
 
 unused = 0
 retries = 10
@@ -250,3 +253,21 @@ def dht(pin,module_type):
             pass
     print ("Error, couldn't read DHT 5 times")
     return [-1,1]
+
+_read_heart=False    
+# get heartbeat and check if a beat has happened from the pulse sensor amped
+# returns [beathappened (true or false),current BPM] bpm zero = no pulse detected
+def heartRead(pin):
+    global _read_heart
+    if not _read_heart:
+        if version()<[1,2,8]:
+            print("You need updated firmware for heart rate sensor")
+            return [-1,-1]
+    _read_heart=True
+    write_i2c_block(address,pulse_read_cmd+[pin,unused,unused])
+    data_back=read_i2c_block(address)[0:4]
+    if data_back[0]!=255:
+      return [data_back[1]==1,data_back[3]*256+data_back[2]]
+    else:
+      return [-1,-1]
+    
