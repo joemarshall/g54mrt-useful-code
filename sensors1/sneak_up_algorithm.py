@@ -2,7 +2,7 @@ import grovepi
 import time
 
 sneak_detect=0
-print "timestamp,motion,sound,sneak_detect"
+print("timestamp,motion,sound,sneak_detect")
 while True:
   m=grovepi.digitalRead(4)
   s=grovepi.analogRead(0)
@@ -17,5 +17,5 @@ while True:
   # to avoid false positives
     sneak_detect=0
   
-  print "%f,%d,%d,%d"%(time.time(),m,s,sneak_detect)
+  print("%f,%d,%d,%d"%(time.time(),m,s,sneak_detect))
   time.sleep(.1)

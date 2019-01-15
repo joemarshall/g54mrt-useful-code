@@ -10,7 +10,7 @@ lastPIR2Time=None
 lastNumberIn=0
 numberIn=0
 startTime=time.time()
-print "time,pir1,pir2,numberIn"
+print("time,pir1,pir2,numberIn")
 
 # we only do things when the PIR values *rise*
 lastPIR1=0
@@ -40,5 +40,5 @@ while True:
             numberIn+=1
     lastPIR1=pir1
     lastPIR2=pir2    
-    print "%f,%d,%d,%d"%(curTime-startTime,pir1,pir2,numberIn)
-    time.sleep(0.5)
+    print("%f,%d,%d,%d"%(curTime-startTime,pir1,pir2,numberIn))
+    time.sleep(0.1)

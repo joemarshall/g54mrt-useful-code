@@ -65,25 +65,14 @@ def _initSensor():
 
     # power on
     _writeReg(_REG_CONTROL,0x3)
-#    bus.write_byte(_DIGITAL_LIGHT_ADDR,_REG_CONTROL)
-#    bus.write_byte(_DIGITAL_LIGHT_ADDR,0x3)
     time.sleep(0.5)
-    print "Power:",_readReg(_REG_CONTROL)
-    #    bus.read_byte_data(_DIGITAL_LIGHT_ADDR,0x80)
-    # timing - sample every 100 ms
+    print("Power:",_readReg(_REG_CONTROL))
 #    # timing - sample every 13 ms
     _writeReg(_REG_TIMING,0x11)
     
     _writeReg(_REG_CONTROL,0x3)
     _writeReg(_REG_INTERRUPT,0x0)
-#    _writeReg(_REG_CONTROL,0x0)
-    
-#    bus.write_byte_data(_DIGITAL_LIGHT_ADDR,_REG_TIMING,0)
-    print "ID:%x"%_readReg(_REG_ID)#    bus.read_byte_data(_DIGITAL_LIGHT_ADDR,_REG_ID)
-#    print "ID:",    bus.read_byte_data(_DIGITAL_LIGHT_ADDR,_REG_ID)
-
-#    bus.write_byte_data(_DIGITAL_LIGHT_ADDR,_REG_TIMING,11)
-#    bus.write_byte_data(_DIGITAL_LIGHT_ADDR,_REG_TIMING,0x0)
+    print ("ID:%x"%_readReg(_REG_ID))
     
 _initSensor()
 
@@ -96,7 +85,6 @@ def getSensorValues(gain=16):
  #   time.sleep(0.114)
     data0=_readWord(_REG_DATA0)
     data1=_readWord(_REG_DATA1)
-#    _writeReg(_REG_CONTROL,0)
     return data0,data1
 
 LUX_SCALE=14           # scale by 2^14
@@ -178,6 +166,6 @@ def getLux(gain=1,val0=None,val1=None):
     
 if __name__=="__main__":
     while True:
-        print "%d,%d"%getSensorValues()
+        print( "%d,%d"%getSensorValues())
 #        print getLux(1),getLux(16)
 #        time.sleep(0.5)

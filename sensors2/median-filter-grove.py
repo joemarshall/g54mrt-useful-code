@@ -10,10 +10,13 @@ import collections # for deque class
 # (when it contains maxlen values), and things 
 # will be pushed off the other end     
 historyBuffer=collections.deque(maxlen=21)
+
+print("Time,Raw data,Median")
+
 while True:
   dataPoint=grovepi.analogRead(1)
   historyBuffer.append(dataPoint)
   orderedHistory=sorted(historyBuffer)
   median=orderedHistory[int(len(orderedHistory)/2)]
-  print dataPoint,",",median
+  print("%4.4f,%4.4f,%4.4f"%(time.time(),dataPoint,median))
   time.sleep(0.1)

@@ -1,3 +1,4 @@
+# matplotlib code to run on a PC to plot a CSV file
 from matplotlib.pyplot import *
 from matplotlib.ticker import FuncFormatter
 import time,calendar
@@ -18,7 +19,7 @@ plot(xValues,yValues)
 startTime=xValues[0]
 endTime=xValues[-1]
 
-print startTime,endTime,len(yValues),min(yValues),max(yValues)
+print(startTime,endTime,len(yValues),min(yValues),max(yValues))
 
 # this bit of code puts nice labels on the chart for each hour
 tickPos=[]
