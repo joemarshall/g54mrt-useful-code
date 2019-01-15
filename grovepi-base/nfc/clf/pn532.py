@@ -200,15 +200,15 @@ class Device(pn53x.Device):
 
         self.chipset.sam_configuration("normal")
         self.chipset.set_parameters(0b00000000)
-        self.chipset.rf_configuration(0x02, "\x00\x0B\x0A")
-        self.chipset.rf_configuration(0x04, "\x00")
-        self.chipset.rf_configuration(0x05, "\x01\x00\x01")
+        self.chipset.rf_configuration(0x02, b"\x00\x0B\x0A")
+        self.chipset.rf_configuration(0x04, b"\x00")
+        self.chipset.rf_configuration(0x05, b"\x01\x00\x01")
         
         # The default value of CIU_ModGsP does not work with the Texas
         # Instruments RF430CL330H Type B NFC Interface Transponder. It
         # works when setting ModGsP to 0x10.
         self.log.debug("write analog settings for type B")
-        self.chipset.rf_configuration(0x0C, "\xFF\x10\x85") # ModGsP
+        self.chipset.rf_configuration(0x0C, b"\xFF\x10\x85") # ModGsP
         
         self.mute()
 

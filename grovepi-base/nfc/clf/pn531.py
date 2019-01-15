@@ -193,9 +193,9 @@ class Device(pn53x.Device):
 
         self.chipset.sam_configuration("normal")
         self.chipset.set_parameters(0b00000000)
-        self.chipset.rf_configuration(0x02, "\x00\x0B\x0A")
-        self.chipset.rf_configuration(0x04, "\x00")
-        self.chipset.rf_configuration(0x05, "\x01\x00\x01")
+        self.chipset.rf_configuration(0x02, b"\x00\x0B\x0A")
+        self.chipset.rf_configuration(0x04, b"\x00")
+        self.chipset.rf_configuration(0x05, b"\x01\x00\x01")
         self.mute()
 
     def close(self):
@@ -300,7 +300,7 @@ class Device(pn53x.Device):
         return super(Device, self).listen_dep(target, timeout)
 
     def _init_as_target(self, mode, tta_params, ttf_params, timeout):
-        nfcid3t = ttf_params[0:8] + "\x00\x00"
+        nfcid3t = ttf_params[0:8] + b"\x00\x00"
         args = (mode, tta_params, ttf_params, nfcid3t, '', timeout)
         return self.chipset.tg_init_tama_target(*args)
 

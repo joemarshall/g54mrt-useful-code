@@ -190,7 +190,7 @@ class Tag(object):
         """x.__str__() <==> str(x)"""
         try: s = self.type + ' ' + repr(self._product)
         except AttributeError: s = self.type
-        return s + ' ID=' + self.identifier.encode("hex").upper()
+        return s + ' ID=' + self._nfcid.hex().upper()
 
     @property
     def clf(self):
@@ -211,7 +211,7 @@ class Tag(object):
     @property
     def identifier(self):
         """The unique tag identifier."""
-        return str(self._nfcid)
+        return self._nfcid
 
     @property
     def ndef(self):

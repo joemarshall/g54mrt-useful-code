@@ -49,19 +49,23 @@ class I2C(object):
     def write(self,frame):
         fcntl.ioctl(self.i2cDev,0x0703,0x24)
         time.sleep(0.001)
+        #print("write:",frame.hex())
         os.write(self.i2cDev,frame)
+        #print("Write ok")
 
     def read(self,timeout=100):
+        #print("read")
         fcntl.ioctl(self.i2cDev,0x0703,0x24)
         time.sleep(0.001)
         endTime=time.time()+timeout*0.001
         while True:
           rd=os.read(self.i2cDev,1024)
+          #print("read some")
           buf = bytearray()
           buf.extend(rd)
           if buf[0]&1 == 1:
             if buf[1:].startswith(bytearray.fromhex("0000ff00ff")):
-#                print("ACK")
+                #print("ACK")
                 return buf[1:7]
             else:
                bufLength=buf[4]

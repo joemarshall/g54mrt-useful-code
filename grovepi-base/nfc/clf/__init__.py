@@ -34,7 +34,7 @@ import nfc.dep
 import nfc.llcp
 from . import device
 
-print_data = lambda data: 'None' if data is None else str(data).encode("hex")
+print_data = lambda data: 'None' if data is None else data.hex()
 
 class ContactlessFrontend(object):
     """This class is the main interface for working with contactless
@@ -1068,7 +1068,7 @@ class Target(object):
             if name.startswith('_'): continue
             value = self.__dict__[name]
             if isinstance(value, (bytearray, str)):
-                value = str(value).encode("hex").upper()
+                value = bytearray(value).hex().upper()
             attrs.append("{0}={1}".format(name, value))
         return "{brty} {attrs}".format(brty=self.brty, attrs=' '.join(attrs))
 

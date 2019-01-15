@@ -43,7 +43,7 @@ def waitForTag(timeout):
     return None
   id=[]
   for c in tagObj.identifier:
-    id.append(ord(c))
+    id.append(c)
   return id
   
 

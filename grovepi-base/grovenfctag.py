@@ -74,7 +74,7 @@ class NFCTagBuffer:
     
     # write data to the tag at current position and increment write position if needed
     def writeData(self, bytes):
-        print(("write:"+str(bytes)))
+        #print(("write:"+str(bytes)))
         self.bytes.extend(bytes)
         self.flush(False)
         
