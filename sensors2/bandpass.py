@@ -14,4 +14,4 @@ while True:
     
     lowPass=lowPass*(1.0-constantLP) + highPass * constantLP
     print("%4.4f,%4.4f,%4.4f,%4.4f"%(time.time(),value,highPass,lowPass))
-    time.sleep(0.1)
+    time.sleep(0.05)

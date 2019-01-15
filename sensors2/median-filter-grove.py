@@ -14,7 +14,7 @@ historyBuffer=collections.deque(maxlen=21)
 print("Time,Raw data,Median")
 
 while True:
-  dataPoint=grovepi.analogRead(1)
+  dataPoint=grovepi.analogRead(0)
   historyBuffer.append(dataPoint)
   orderedHistory=sorted(historyBuffer)
   median=orderedHistory[int(len(orderedHistory)/2)]
