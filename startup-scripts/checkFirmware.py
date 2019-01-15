@@ -16,7 +16,7 @@ def doUpdate():
         while grovepi.digitalRead(2)==1:
             time.sleep(0.01)
     firmwarePath=os.path.join(os.path.dirname(os.path.realpath(__file__)),"grove_pi_firmware.hex")
-    print firmwarePath
+    print (firmwarePath)
     grovelcd.setText("Try update firmware\n---------------")
     retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","lfuse:w:0xFF:m"])
     if retVal==0:

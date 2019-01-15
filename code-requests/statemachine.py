@@ -39,13 +39,13 @@ currentState=STATE_UNKNOWN
 change_state_counter=0
 
 # CSV header
-print "ultrasound,rotation,currentState,change_state_counter"
+print("ultrasound,rotation,currentState,change_state_counter")
 
 while True:
     # first read the sensors
     ultrasound=grovepi.ultrasonicRead(ULTRASOUND_PIN)
     rotation=grovepi.analogRead(ROTATION_SENSOR_PIN)
-    print "%d,%d,%d,%d"%(ultrasound,rotation,currentState,change_state_counter)
+    print("%d,%d,%d,%d"%(ultrasound,rotation,currentState,change_state_counter))
     
     # for each current state, check the sensors and decide whether to change state
     if currentState==STATE_UNKNOWN:
@@ -85,4 +85,4 @@ while True:
         elif ultrasound < THRESHOLD_DOOR_OPEN_ULTRASOUND and rotation<THRESHOLD_DOOR_OPEN_ROTATION:
             # door definitely closed - reset counter
             change_state_counter=0
-    time.sleep(1)
+    time.sleep(0.1)

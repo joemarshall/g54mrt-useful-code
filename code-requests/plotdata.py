@@ -45,7 +45,7 @@ class DrawPanel(wx.Frame):
             self.addPoint(snd,light,temperature)
         else:
             # running standalone, read from http server
-            resp=urllib2.urlopen(REMOTE_ADDRESS,timeout=1)
+            resp=urllib.request.urlopen(REMOTE_ADDRESS,timeout=1)
             header=resp.readline().rstrip("\n").split(",")
             srcvals=resp.readline().rstrip("\n").split(",")
             values={}
@@ -73,7 +73,7 @@ def initPanel():
         
 if threading.current_thread().name == 'MainThread':      
     # we're not in the emulator
-    import urllib2
+    import urllib.request, urllib.error, urllib.parse
     if len(sys.argv)>1:
         REMOTE_ADDRESS=sys.argv[1]
     else:

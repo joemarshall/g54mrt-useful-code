@@ -1,13 +1,13 @@
 # if you run this on a PI, it will output analogread 0 and analogread 1 in a webserver that can be accessed by the emulator at http://pi-ip-address:23456/ 
-# can use this to put PI data straight into code running in an emulator, or to make your own sensor box just like the sensor boxes that we have in A32
+# can use this to put PI data straight into code running in an emulator, or to make your own sensor box that can be read easily
 
-import BaseHTTPServer
+import http.server
 import time
 import grovepi
 
 PORT = 23456
 
-class GetSensorHandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class GetSensorHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.send_header("Update-Rate","25")
@@ -19,7 +19,7 @@ class GetSensorHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 Handler = GetSensorHandler
 
-httpd = BaseHTTPServer.HTTPServer(("", PORT), Handler)
+httpd = http.server.HTTPServer(("", PORT), Handler)
 
-print "serving at port", PORT
+print("serving at port", PORT)
 httpd.serve_forever()

@@ -1,3 +1,6 @@
+# example code used in the lecture to make the graph of how a median filter removes
+# noise
+
 import random
 import collections
 
@@ -21,4 +24,4 @@ for dataPoint in testData:
     historyBuffer.append(dataPoint)
     orderedHistory=sorted(historyBuffer)
     median=orderedHistory[int(len(orderedHistory)/2)]
-    print dataPoint,",",median
+    print(dataPoint,",",median)

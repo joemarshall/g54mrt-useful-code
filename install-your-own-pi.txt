@@ -1,6 +1,6 @@
 First, download raspbian image from: 
 https://www.raspberrypi.org/downloads/raspbian/
-We use Jessie on the lab PIs, I think either will work.
+We use Stretch (lite version) on the lab PIs, I think either version will work.
 
 Write the image to an sd card. On windows I used Win32diskimager
 http://sourceforge.net/projects/win32diskimager/?source=typ_redirect
