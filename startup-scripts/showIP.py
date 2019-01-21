@@ -11,13 +11,22 @@ import os.path
 version = grovepi.version()
 burndate=time.strftime("%d/%m/%Y",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
 
-grovelcd.setText("MRT:%s\n Fw:%s"%(burndate,version))
+imgdate=""
+try:
+    with open('/boot/image-date.txt') as im:
+      imgdate=im.read()
+except IOError:
+    imgdate=""
+
+grovelcd.setText("MRT:%s\nF:%s %s"%(burndate,version,imgdate[0:4]))
 
 grovelcd.setRGB(128,128,128)
 cyclePos=1
 #grovelcd.setText("No address yet")
 
 curText=""
+
+time.sleep(2)
 
 # changed to only say IP address, so as not to confuse people with gateway addresses
 
