@@ -8,17 +8,24 @@ import socket
 import grovepi
 import os.path
 
-version = grovepi.version()
-burndate=time.strftime("%d/%m/%Y",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
+try:
+    version = grovepi.version()
+    version=version.replace(".","")
+except IOError:
+    version="???"
+burnDate=time.strftime("%d%m",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
 
-imgdate=""
+imgDate=""
 try:
     with open('/boot/image-date.txt') as im:
-      imgdate=im.read()
+      imgDate=im.read()
 except IOError:
-    imgdate=""
+    imgDate=""
 
-grovelcd.setText("MRT:%s\nF:%s %s"%(burndate,version,imgdate[0:4]))
+gitVer=subprocess.check_output("git --git-dir=/home/pi/g54mrt-useful-code/.git log -1 --format=\"%at\"  | xargs -I{} date -d @{} +%d%m%y",shell=True) 
+gitVer=gitVer.decode()    
+print(gitVer)
+grovelcd.setText("MRT%s %s\nIMG FW%s (%s)"%(imgDate[0:4]+imgDate[6:8],gitVer[0:6],version,burnDate))
 
 grovelcd.setRGB(128,128,128)
 cyclePos=1
@@ -26,7 +33,7 @@ cyclePos=1
 
 curText=""
 
-time.sleep(2)
+time.sleep(5)
 
 # changed to only say IP address, so as not to confuse people with gateway addresses
 
