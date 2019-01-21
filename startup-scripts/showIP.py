@@ -5,10 +5,17 @@ import time
 import subprocess
 import re
 import socket
+import grovepi
+import os.path
+
+version = grovepi.version()
+burndate=time.strftime("%d/%m/%Y",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
+
+grovelcd.setText("MRT:%s\n Fw:%s"%(burndate,version))
 
 grovelcd.setRGB(128,128,128)
 cyclePos=1
-grovelcd.setText("No address yet")
+#grovelcd.setText("No address yet")
 
 curText=""
 
