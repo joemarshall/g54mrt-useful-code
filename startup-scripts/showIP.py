@@ -8,10 +8,12 @@ import socket
 import grovepi
 import os.path
 
+badFirmware=True
 try:
     version = grovepi.version()
     version=version.replace(".","")
-except IOError:
+    badFirmware=False
+except:
     version="???"
 burnDate=time.strftime("%d%m",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
 
