@@ -207,8 +207,10 @@ def rtc_getTime():
     number = read_i2c_block(address)
     return number
 
+_PREV_DHT=[0,0]
 
-def dht(pin,module_type):
+def dht(pin,module_type=0):
+    global _PREV_DHT
     """ Read and return temperature and humidity from Grove DHT Pro """
     for retries in range(5):
         try:
@@ -246,13 +248,16 @@ def dht(pin,module_type):
                 t=round(struct.unpack('f',t_val)[0],2)
                 hum=round(struct.unpack('f',h_val)[0],2)
             if t > -100.0 and t <150.0 and hum >= 0.0 and hum<=100.0:
+                _PREV_DHT=[t,hum]
                 return [t, hum]
             else:
-                return [float('nan'),float('nan')]        
+                time.sleep(0.1)
+                continue
+#                return [float('nan'),float('nan')]        
         except IOError:
             pass
-    print ("Error, couldn't read DHT 5 times")
-    return [-1,1]
+#    print ("Error, couldn't read DHT 5 times")
+    return _PREV_DHT
 
 _read_heart=False    
 # get heartbeat and check if a beat has happened from the pulse sensor amped
