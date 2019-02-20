@@ -15,7 +15,7 @@
 # These files have been made available online through a Creative Commons Attribution-ShareAlike 3.0  license.
 # (http://creativecommons.org/licenses/by-sa/3.0/)
 ################################################################################################################
-import smbus
+import smbus2 as smbus
 import time
 import math
 import RPi.GPIO as GPIO
@@ -83,11 +83,11 @@ def read_i2c_byte(address):
 
 
 # Read I2C block
-def read_i2c_block(address):
+def read_i2c_block(address,len):
     """ Read I2C block, used internally only """
     for i in range(retries):
         try:
-            return bus.read_i2c_block_data(address, 1)
+            return bus.read_i2c_block_data(address, 1,len)
         except IOError:
             if debug:
                 print ("IOError")
@@ -111,7 +111,7 @@ def version():
     write_i2c_block(address, version_cmd + [unused, unused, unused])
     time.sleep(.1)
     read_i2c_byte(address)
-    number = read_i2c_block(address)
+    number = read_i2c_block(address,4)
     return "%s.%s.%s" % (number[1], number[2], number[3])
 
     
@@ -136,11 +136,20 @@ def pinMode(pin, mode):
 
 # Read analog value from Pin
 def analogRead(pin):
-    """ Read analog value from analog pin <pin> """
-    write_i2c_block(address, aRead_cmd + [pin, unused, unused])
-    read_i2c_byte(address)
-    number = read_i2c_block(address)
-    return number[1] * 256 + number[2]
+    """ Read analog value from analog pin <pin> """ 
+    for i in range(retries):
+        try:
+            #write_i2c_block(address, aRead_cmd + [pin, unused, unused])
+            bus.write_i2c_block_data(address,1,aRead_cmd + [pin, unused, unused])
+            #read_i2c_byte(address)
+            bus.read_byte(address)
+            number = bus.read_i2c_block_data(address,1,3)
+            #read_i2c_block(address,3)
+            return number[1] * 256 + number[2]
+        except IOError:
+            if debug:
+                print ("IOError")
+    return 0
 
 
 # Write PWM
@@ -168,7 +177,7 @@ def ultrasonicRead(pin):
     write_i2c_block(address, uRead_cmd + [pin, unused, unused])
     time.sleep(.06) #firmware has a time of 50ms so wait for more than that
     read_i2c_byte(address)
-    number = read_i2c_block(address)
+    number = read_i2c_block(address,3)
     return (number[1] * 256 + number[2])
 
     
@@ -180,7 +189,7 @@ def ultrasonicReadBegin(pin):
 def ultrasonicReadFinish(pin):
     """ Finish reading value from Grove Ultrasonic sensor - you can't do other grovepi things between ultrasonicReadBegin and ultrasonicReadFinish, but you can read accelerometer, nfc etc. """
     read_i2c_byte(address)
-    number = read_i2c_block(address) 
+    number = read_i2c_block(address,3) 
     return (number[1]*256+number[2])
         
         
@@ -189,7 +198,7 @@ def acc_xyz():
     write_i2c_block(address,acc_xyz_cmd+[0,0,0])
     time.sleep(.1)
     read_i2c_byte(address)
-    number = read_i2c_block(address)
+    number = read_i2c_block(address,4)
     if number[1]>32:
         number[1]=-(number[1]-224)
     if number[2]>32:
@@ -204,7 +213,7 @@ def rtc_getTime():
     write_i2c_block(address,rtc_getTime_cmd+[0,0,0])
     time.sleep(.1)
     read_i2c_byte(address)
-    number = read_i2c_block(address)
+    number = read_i2c_block(address,16)
     return number
 
 _PREV_DHT=[0,0]
@@ -220,7 +229,7 @@ def dht(pin,module_type=0):
             # time.sleep(.6)
             try:
                 read_i2c_byte(address)
-                number = read_i2c_block(address)
+                number = read_i2c_block(address,10)
                 # time.sleep(.1)
                 if number == -1:
                     return [-1,-1]
@@ -270,7 +279,7 @@ def heartRead(pin):
             return [-1,-1]
     _read_heart=True
     write_i2c_block(address,pulse_read_cmd+[pin,unused,unused])
-    data_back=read_i2c_block(address)[0:4]
+    data_back=read_i2c_block(address,5)[0:4]
     if data_back[0]!=255:
       return [data_back[1]==1,data_back[3]*256+data_back[2]]
     else:
