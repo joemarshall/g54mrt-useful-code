@@ -95,10 +95,15 @@ def read_i2c_block(address,len):
 
 def digitalRead(pin):
     """ Arduino Digital Read from digital pin <pin>"""
-    write_i2c_block(address, dRead_cmd + [pin, unused, unused])
-    # time.sleep(.1)
-    n = read_i2c_byte(address)
-    return n
+    for i in range(retries):
+        try:
+            bus.write_i2c_block_data(address,1, dRead_cmd + [pin, unused, unused])
+            n= bus.read_byte(address)
+            return n
+        except IOError:
+            if debug:
+                print ("IOError")
+    return 0
 
 # Arduino Digital Write
 def digitalWrite(pin, value):
@@ -108,11 +113,17 @@ def digitalWrite(pin, value):
     
 def version():
     """ Read the firmware version from the GrovePI board """
-    write_i2c_block(address, version_cmd + [unused, unused, unused])
-    time.sleep(.1)
-    read_i2c_byte(address)
-    number = read_i2c_block(address,4)
-    return "%s.%s.%s" % (number[1], number[2], number[3])
+    for i in range(retries):
+        try:
+            bus.write_i2c_block_data(address,1, version_cmd + [unused, unused, unused])
+            time.sleep(.1)
+            bus.read_byte(address)
+            number = bus.read_i2c_block_data(address,1,4)
+            return "%s.%s.%s" % (number[1], number[2], number[3])
+        except IOError:
+            if debug:
+                print ("IOError")
+    return "-1.-1.-1"
 
     
 #Setting Up Pin mode on Arduino
@@ -174,11 +185,17 @@ def temp(pin,model = '1.0'):
     
 def ultrasonicRead(pin):
     """ Read value from Grove Ultrasonic sensor """
-    write_i2c_block(address, uRead_cmd + [pin, unused, unused])
-    time.sleep(.06) #firmware has a time of 50ms so wait for more than that
-    read_i2c_byte(address)
-    number = read_i2c_block(address,3)
-    return (number[1] * 256 + number[2])
+    for i in range(retries):
+        try:
+            bus.write_i2c_block_data(address,1, uRead_cmd + [pin, unused, unused])
+            time.sleep(.06) #firmware has a time of 50ms so wait for more than that
+            bus.read_byte(address)
+            number = bus.read_i2c_block_data(address,1,3)
+            return (number[1] * 256 + number[2])
+        except IOError:
+            if debug:
+                print ("IOError")
+    return 0
 
     
 def ultrasonicReadBegin(pin):
