@@ -1,6 +1,6 @@
 import smbus
 import struct 
-
+import time 
 BMI088_ACC_ADDRESS         =0x19
 
 BMI088_ACC_CHIP_ID         =0x00 
@@ -106,10 +106,13 @@ GYRO_DEEP_SUSPEND = 0x20
 ACC_ACTIVE = 0x00
 ACC_SUSPEND = 0x03 
 
+_GYRO_INITED=False
 
 bus=smbus.SMBus(1)
 
 def init():
+    global _GYRO_INITED
+    _GYRO_INITED=True
     setAccScaleRange(RANGE_6G)
     setAccOutputDataRate(ODR_100)
     setAccPowerMode(ACC_ACTIVE)
@@ -171,18 +174,26 @@ def setGyroOutputDataRate(odr):
     bus.write_byte_data(BMI088_GYRO_ADDRESS, BMI088_GYRO_BAND_WIDTH, odr)
     
 def getAccel():
+    """Get accelerometer values (in multiples of g)        
+    """
+    if not _GYRO_INITED:
+        init()
     accData=bus.read_i2c_block_data(BMI088_ACC_ADDRESS,BMI088_ACC_X_LSB,6)
     ax,ay,az=struct.unpack('hhh',struct.pack("BBBBBB",*accData))
     mult=_accRange / 32768
     return (ax*mult,ay*mult,az*mult)
 
 def getGyro():
+    """Get gyro values (in degrees per second)        
+    """
+    if not _GYRO_INITED:
+        init()
     accData=bus.read_i2c_block_data(BMI088_GYRO_ADDRESS,BMI088_GYRO_RATE_X_LSB, 6)
     ax,ay,az=struct.unpack('hhh',struct.pack("BBBBBB",*accData))
     mult=_gyroRange / 32768
     return (ax*mult,ay*mult,az*mult)
 
-init()
+#init()
 
 if __name__=="__main__":
     while True:
