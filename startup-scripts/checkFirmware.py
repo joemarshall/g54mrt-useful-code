@@ -53,7 +53,7 @@ except:
 
 if needsUpdate:
     grovelcd.setRGB(128,128,128)
-    grovelcd.setText("Needs firmware\npress D2 button")
+    grovelcd.setText("Old firmware[D2]")
 
     while grovepi.digitalRead(2)==0:
         time.sleep(0.01)
