@@ -10,7 +10,7 @@ then
     sudo cp /home/pi/g54mrt-useful-code/startup-scripts/showIP.py /home/pi/showIP.py
     sudo cp /home/pi/g54mrt-useful-code/grovepi-base/grovelcd.py /home/pi/grovelcd.py
     sudo cp /home/pi/g54mrt-useful-code/grovepi-base/grovepi.py /home/pi/grovepi.py
-    sudo cp /home/pi/g54mrt-useful-code/grovepi-base/smbus2 /home/pi/smbus2
+    sudo cp -r /home/pi/g54mrt-useful-code/grovepi-base/smbus2 /home/pi/smbus2
 fi
 cd /home/g54mrt
 sudo cp /home/pi/g54mrt-useful-code/grovepi-base/getlatest.sh .
