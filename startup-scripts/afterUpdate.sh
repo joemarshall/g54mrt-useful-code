@@ -23,3 +23,5 @@ sudo chown g54mrt.g54mrt /home/g54mrt/.ssh
 sudo chown g54mrt.g54mrt /home/g54mrt/.ssh/authorized_keys
 sudo chmod 644 /home/g54mrt/.ssh/authorized_keys
 
+sudo apt-get install -y screen
+
