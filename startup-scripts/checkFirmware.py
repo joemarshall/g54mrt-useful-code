@@ -46,20 +46,20 @@ needsUpdate=False
 try:
     currentVersion= grovepi.version().split(".")
     verNum=map(int,currentVersion)
-    if verNum<[1,2,7] or verNum[0]==255:
+    if verNum!=[1,2,7] or verNum[0]==255:
         needsUpdate=True
 except:
     needsUpdate=True
 
 if needsUpdate:
     grovelcd.setRGB(128,128,128)
-    grovelcd.setText("Old firmware[D2]")
+    grovelcd.setText("Old firmware")
 
-    while grovepi.digitalRead(2)==0:
-        time.sleep(0.01)
+   # while grovepi.digitalRead(2)==0:
+  #      time.sleep(0.01)
     ## require release of button
-    while grovepi.digitalRead(2)==1:
-        time.sleep(0.01)
+  #  while grovepi.digitalRead(2)==1:
+  #      time.sleep(0.01)
     
     doUpdate()
 
