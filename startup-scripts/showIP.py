@@ -70,7 +70,10 @@ while countLeft==None or countLeft>0:
         if values[2].find("eth")!=-1:
           ethAddr=formatAddr(values[8],"e")
         if values[2].find("wlan")!=-1:
-          wlanAddr=formatAddr(values[8],"w")
+          wlanAddr=formatAddr(values[8],"w")      
+  adapterList=subprocess.check_output(['ifconfig'])
+  if adapterList.find(b"wlan0")==-1:
+      wlanAddr="Plug USB WIFI in"        
   newText=ethAddr+"\n"+wlanAddr
   if newText!=curText:
      curText=newText
