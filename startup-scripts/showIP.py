@@ -49,7 +49,7 @@ def formatAddr(addr,type):
     retVal+=type
   return retVal[0:16]
 
-countLeft=60
+countLeft=300
 while countLeft==None or countLeft>0:
 #  if startTime!=None:
 #    print startTime,time.time(),startTime,startTime+10,time.time()<startTime+30
@@ -62,7 +62,7 @@ while countLeft==None or countLeft>0:
     values=re.split('\s+',line) 
     if len(values)>2:
       if countLeft==None:
-        countLeft=10
+        countLeft=30
       if values[0]=='default':
         pass
 #        grovelcd.setText("%s\ngateway"%values[2])
