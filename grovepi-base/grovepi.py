@@ -7,7 +7,7 @@
 #
 # Karan Nayan, Joe Marshall
 # Initial Date: 13 Feb 2014
-# Last Updated: 10 Jan 2017
+# Last Updated: 13 Mar 2020
 # 
 #
 # http://www.dexterindustries.com/
@@ -22,7 +22,7 @@ import RPi.GPIO as GPIO
 import struct
 import sys
 
-
+gpVersion=None
 debug=False
 
 if sys.version_info<(3,0):
@@ -35,6 +35,8 @@ if rev == 2 or rev == 3:
     bus = smbus.SMBus(1) 
 else:
     bus = smbus.SMBus(0) 
+
+data_not_available_cmd=23
 
 #I2C Address of Arduino
 address = 0x04
@@ -60,18 +62,20 @@ retries = 10
 
 #Function declarations of the various functions used for encoding and sending data from RPi to Arduino
 # Write I2C block
-def write_i2c_block(address, block):
+def write_i2c_block(block):
     """ Write I2C block, used internally only """
     for i in range(retries):
         try:
-            return bus.write_i2c_block_data(address, 1, block)
+            return bus.write_i2c_block_data(address, 1,block)
         except IOError:
             if debug:
-                print ("IOError")
+                print ("IOError write_i2c_block")
+    if debug:
+        print ("fail write_i2c_block")
     return -1
 
 # Read I2C byte
-def read_i2c_byte(address):
+def read_i2c_byte():
     """ Read I2C byte, used internally only """
     for i in range(retries):
         try:
@@ -79,37 +83,79 @@ def read_i2c_byte(address):
         except IOError:
             if debug:
                 print ("IOError")
+    if debug:
+        print ("fail READ_i2c_byte")
     return -1
 
 
-# Read I2C block
-def read_i2c_block(address,len):
+# Read I2C write_i2c_block
+def read_i2c_block(no_bytes):
     """ Read I2C block, used internally only """
     for i in range(retries):
         try:
-            return bus.read_i2c_block_data(address, 1,len)
+            msg=smbus.i2c_msg.read(address,no_bytes)
+            bus.i2c_rdwr(msg)
+            retVal=[]
+            for c in range(no_bytes):
+                retVal.append(ord(msg.buf[c]))
+            if retVal[0] == data_not_available_cmd and debug:
+                print("Not available yet")
+                continue
+            return retVal
         except IOError:
             if debug:
-                print ("IOError")
-    return -1
+                print ("IOError read_i2c_block")
+    if debug:
+        print ("fail READ_i2c_block")
+    return [data_not_available_cmd]
+    
+def read_identified_i2c_block(read_command_id, no_bytes):
+    global gpVersion,address
+    if gpVersion<[1,4,0]:
+#        print("OLD")
+        data=read_i2c_block(no_bytes+1)
+#        print(data,no_bytes)
+    else:
+#        print("NEW")
+        data=[-1]
+        while data[0]!=read_command_id[0]:
+            data=read_i2c_block(no_bytes+1)
+    return data[1:]
 
 def digitalRead(pin):
     """ Arduino Digital Read from digital pin <pin>"""
-    for i in range(retries):
-        try:
-            bus.write_i2c_block_data(address,1, dRead_cmd + [pin, unused, unused])
-            n= bus.read_byte(address)
-            return n
-        except IOError:
-            if debug:
-                print ("IOError")
-    return 0
+    write_i2c_block(dRead_cmd + [pin, unused, unused])    
+    if gpVersion<[1,4,0]:
+        data= bus.read_byte(address)
+    else:
+        data = read_identified_i2c_block( dRead_cmd, no_bytes = 1)[0]
+    return data
 
 # Arduino Digital Write
 def digitalWrite(pin, value):
     """ Arduino Digital write to digital pin <pin>"""
-    write_i2c_block(address, dWrite_cmd + [pin, value, unused])
+    write_i2c_block(dWrite_cmd + [pin, value, unused])
+    read_i2c_block(1)
     return 1
+    
+def versionList():    
+    """ Read the firmware version from the GrovePI board """
+    for i in range(retries):
+        try:
+            write_i2c_block(version_cmd+[unused,unused,unused])
+#            bus.write_i2c_block_data(address,1, version_cmd + [unused, unused, unused])
+            time.sleep(.1)
+            values=read_i2c_block(4)
+            vCmd=values[0]
+            number=values
+#            vCmd=bus.read_byte(address)
+#            number = bus.read_i2c_block_data(address,1,4)
+#            print(vCmd)
+            return number[1:]
+        except IOError:
+            if debug:
+                print ("IOError")
+    return [-1,-1,-1]
     
 def version():
     """ Read the firmware version from the GrovePI board """
@@ -139,34 +185,25 @@ def pinMode(pin, mode):
                 One of "OUTPUT" or "INPUT", as to whether this pin is an output or an input.
     """
     if mode == "OUTPUT":
-        write_i2c_block(address, pMode_cmd + [pin, 1, unused])
+        write_i2c_block(pMode_cmd + [pin, 1, unused])
     elif mode == "INPUT":
-        write_i2c_block(address, pMode_cmd + [pin, 0, unused])
+        write_i2c_block(pMode_cmd + [pin, 0, unused])
+    read_i2c_block(no_bytes = 1)        
     return 1
         
 
 # Read analog value from Pin
 def analogRead(pin):
     """ Read analog value from analog pin <pin> """ 
-    for i in range(retries):
-        try:
-            #write_i2c_block(address, aRead_cmd + [pin, unused, unused])
-            bus.write_i2c_block_data(address,1,aRead_cmd + [pin, unused, unused])
-            #read_i2c_byte(address)
-            bus.read_byte(address)
-            number = bus.read_i2c_block_data(address,1,3)
-            #read_i2c_block(address,3)
-            return number[1] * 256 + number[2]
-        except IOError:
-            if debug:
-                print ("IOError")
-    return 0
-
+    write_i2c_block(aRead_cmd + [pin, unused, unused])
+    number = read_identified_i2c_block(aRead_cmd, no_bytes = 2)
+    return number[0] * 256 + number[1]
 
 # Write PWM
 def analogWrite(pin, value):
     """ Write PWM on digital pin <pin> """
-    write_i2c_block(address, aWrite_cmd + [pin, value, unused])
+    write_i2c_block(aWrite_cmd + [pin, value, unused])
+    read_i2c_block(no_bytes = 1)
     return 1
                      
 def temp(pin,model = '1.0'):
@@ -185,120 +222,78 @@ def temp(pin,model = '1.0'):
     
 def ultrasonicRead(pin):
     """ Read value from Grove Ultrasonic sensor """
-    for i in range(retries):
-        try:
-            bus.write_i2c_block_data(address,1, uRead_cmd + [pin, unused, unused])
-            time.sleep(.06) #firmware has a time of 50ms so wait for more than that
-            bus.read_byte(address)
-            number = bus.read_i2c_block_data(address,1,3)
-            return (number[1] * 256 + number[2])
-        except IOError:
-            if debug:
-                print ("IOError")
-    return 0
+    write_i2c_block(uRead_cmd + [pin, unused, unused])
+    if gpVersion<[1,4,0]:
+        time.sleep(.06)#firmware has a time of 50ms so wait for more than that
+
+    number = read_identified_i2c_block(uRead_cmd, no_bytes = 2)
+    return (number[0] * 256 + number[1])
 
     
 def ultrasonicReadBegin(pin):
     """ Start to read value from Grove Ultrasonic sensor - you can't do other grovepi things before doing ultrasonicReadFinish, but you can read accelerometer, nfc etc. """
-    write_i2c_block(address,uRead_cmd+[pin,0,0])
+    write_i2c_block(uRead_cmd+[pin,0,0])
     return 0
 
 def ultrasonicReadFinish(pin):
-    """ Finish reading value from Grove Ultrasonic sensor - you can't do other grovepi things between ultrasonicReadBegin and ultrasonicReadFinish, but you can read accelerometer, nfc etc. """
-    read_i2c_byte(address)
-    number = read_i2c_block(address,3) 
-    return (number[1]*256+number[2])
+    """ Finish reading value from Grove Ultrasonic sensor - you can't do other grovepi things between ultrasonicReadBegin and ultrasonicReadFinish, but you can read accelerometer, nfc etc. Returns -1 if not ready """
+    number = read_i2c_block(3) 
+    if number[0]==uRead_cmd:
+        return (number[1]*256+number[2])
+    else:
+        return -1
         
-        
-def acc_xyz():
-    """ Read Grove Accelerometer (+/- 1.5g) XYZ value """
-    write_i2c_block(address,acc_xyz_cmd+[0,0,0])
-    time.sleep(.1)
-    read_i2c_byte(address)
-    number = read_i2c_block(address,4)
-    if number[1]>32:
-        number[1]=-(number[1]-224)
-    if number[2]>32:
-        number[2]=-(number[2]-224)
-    if number[3]>32:
-        number[3]=-(number[3]-224)
-    return (number[1],number[2],number[3])
-   
+           
 
-def rtc_getTime():
-    """ Read from Grove RTC"""
-    write_i2c_block(address,rtc_getTime_cmd+[0,0,0])
-    time.sleep(.1)
-    read_i2c_byte(address)
-    number = read_i2c_block(address,16)
-    return number
-
-_PREV_DHT=[0,0]
+_PREV_DHT={}
+_PREV_DHT_TIME=time.time()        
+_PREV_DHT_PIN=-1
 
 def dht(pin,module_type=0):
-    global _PREV_DHT
+    global _PREV_DHT,_PREV_DHT_TIME,_PREV_DHT_PIN
+    retVal=_PREV_DHT.get(pin,[0,0])
     """ Read and return temperature and humidity from Grove DHT Pro """
     for retries in range(5):
-        try:
-            write_i2c_block(address, dht_temp_cmd + [pin, module_type, unused])
+        write_i2c_block(dht_temp_cmd + [pin, module_type, unused])
+        if gpVersion<[1,4,0]:
+            # old firmware needs you to pause on first reading of new pin
+            # new firmware (1.4) just reads slowly always
+            curTime=time.time()
+            if _PREV_DHT_PIN!=pin:
+                time.sleep(0.6)
+            _PREV_DHT_PIN=pin
+        number = read_identified_i2c_block(dht_temp_cmd, no_bytes = 8)
+        #print(number)
+        if p_version==2:
+            h=''
+            for element in (number[0:4]):
+                h+=chr(element)
 
-            # Delay necessary for proper reading fron DHT sensor
-            # time.sleep(.6)
-            try:
-                read_i2c_byte(address)
-                number = read_i2c_block(address,10)
-                # time.sleep(.1)
-                if number == -1:
-                    return [-1,-1]
-            except (TypeError, IndexError):
-                return [-1,-1]
-            # data returned in IEEE format as a float in 4 bytes
-            
-            if p_version==2:
-                h=''
-                for element in (number[1:5]):
-                    h+=chr(element)
-                    
-                t_val=struct.unpack('f', h)
-                t = round(t_val[0], 2)
+            t_val=struct.unpack('f', h)
+            t = round(t_val[0], 2)
 
-                h = ''
-                for element in (number[5:9]):
-                    h+=chr(element)
-                
-                hum_val=struct.unpack('f',h)
-                hum = round(hum_val[0], 2)
-            else:
-                t_val=bytearray(number[1:5])
-                h_val=bytearray(number[5:9])
-                t=round(struct.unpack('f',t_val)[0],2)
-                hum=round(struct.unpack('f',h_val)[0],2)
-            if t > -100.0 and t <150.0 and hum >= 0.0 and hum<=100.0:
-                _PREV_DHT=[t,hum]
-                return [t, hum]
-            else:
-                time.sleep(0.1)
-                continue
-#                return [float('nan'),float('nan')]        
-        except IOError:
-            pass
-#    print ("Error, couldn't read DHT 5 times")
-    return _PREV_DHT
+            h = ''
+            for element in (number[4:8]):
+                h+=chr(element)
 
-_read_heart=False    
-# get heartbeat and check if a beat has happened from the pulse sensor amped
-# returns [beathappened (true or false),current BPM] bpm zero = no pulse detected
-def heartRead(pin):
-    global _read_heart
-    if not _read_heart:
-        if version()<[1,2,8]:
-            print("You need updated firmware for heart rate sensor")
-            return [-1,-1]
-    _read_heart=True
-    write_i2c_block(address,pulse_read_cmd+[pin,unused,unused])
-    data_back=read_i2c_block(address,5)[0:4]
-    if data_back[0]!=255:
-      return [data_back[1]==1,data_back[3]*256+data_back[2]]
-    else:
-      return [-1,-1]
+            hum_val=struct.unpack('f',h)
+            hum = round(hum_val[0], 2)
+        else:
+            t_val=bytearray(number[0:4])
+            h_val=bytearray(number[4:8])
+            t=round(struct.unpack('f',t_val)[0],2)
+            hum=round(struct.unpack('f',h_val)[0],2)
+        if t > -100.0 and t <150.0 and hum > 0.0 and hum<=100.0:
+            _PREV_DHT[pin]=[t, hum]
+            return [t, hum]
+        else:
+            return retVal
+            if debug:
+                print("DHT retry")
+            continue
+    if debug==True:
+        print("Read DHT fail")
+    return retVal
+
     
+gpVersion=versionList()
