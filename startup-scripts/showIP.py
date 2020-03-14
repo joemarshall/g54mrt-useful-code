@@ -15,8 +15,10 @@ try:
     badFirmware=False
 except:
     version="???"
-burnDate=time.strftime("%d%m",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
-
+try:
+    burnDate=time.strftime("%d%m",time.gmtime(os.path.getmtime('/boot/burning-date.txt')))
+except:
+    burnDate="0000"
 imgDate=""
 try:
     with open('/boot/image-date.txt') as im:
