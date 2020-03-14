@@ -71,7 +71,7 @@ This should work, and should show something on address 4 of the i2c bus. If not,
 10)Download the lab software:
 First install GIT, which lets you get hold of the software
 sudo apt-get install git
-git clone https://github.com/joemarshall/g54ubi-useful-code.git
+git clone https://github.com/joemarshall/g54mrt-useful-code.git
 
 11)Install the show ip address script (and an update script which will get latest versions from github when they change.
 cd ~/g54ubi-useful-code/startup-scripts
