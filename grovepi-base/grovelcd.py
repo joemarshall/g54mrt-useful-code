@@ -18,8 +18,7 @@ import time,sys
 DISPLAY_RGB_ADDR=0x62
 DISPLAY_TEXT_ADDR=0x3e
 
-import smbus
-
+import smbus2 as smbus
 firstTime=True
 
 bus=smbus.SMBus(1)

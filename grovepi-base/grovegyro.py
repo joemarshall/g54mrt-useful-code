@@ -1,4 +1,5 @@
-import smbus
+import smbus2 as smbus
+
 import struct 
 import time 
 BMI088_ACC_ADDRESS         =0x19

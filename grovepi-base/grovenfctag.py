@@ -18,7 +18,7 @@ import time,sys
 
 NFC_ADDR = 0x53
 
-import smbus
+import smbus2 as smbus
 
 bus=smbus.SMBus(1)
     

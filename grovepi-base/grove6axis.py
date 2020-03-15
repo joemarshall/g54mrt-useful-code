@@ -52,7 +52,8 @@ IRC_REG_M=0x0C
 SIX_AXIS_ACCEL_ADDR=0x18
 SIX_AXIS_MAG_ADDR=0x1E
 
-import smbus
+import smbus2 as smbus
+
 
 bus=smbus.SMBus(1)
 ACCEL_SCALE=2
