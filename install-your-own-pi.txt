@@ -5,7 +5,7 @@ If you don't want to, the instructions below *should* work, as they are roughly 
 
 First, download raspbian image from: 
 https://www.raspberrypi.org/downloads/raspbian/
-We use Stretch (lite version) on the lab PIs, I think either version will work.
+We use lite version on the lab PIs, I think either version will work.
 
 Write the image to an sd card. On windows I used Win32diskimager
 http://sourceforge.net/projects/win32diskimager/?source=typ_redirect
@@ -13,11 +13,11 @@ http://sourceforge.net/projects/win32diskimager/?source=typ_redirect
 Make raspberry pi talk to the grovepi (via I2C)
 https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
 Start up the raspberry pi with a screen/keyboard (you can connect hdmi to screens in the lab, ask us if you need a keyboard (or unplug from lab machines))
-1) It will start up in raspi-config, select "expand filesystem"
-2) Select advanced options
+1) sudo-raspi config (if it isn't already in raspi-config)
+2) Select interfacing options
 3) Select I2C, and press yes to everything - I2C is how the raspberry pi talks to the grovepi board
-4) Finish, select reboot now. Wait for it to come back
-5) Log in (pi / raspberry)
+4) Log in (pi / raspberry)
+
 
 6)Connect to the wifi network or an ethernet cable.
 If you're in the computer lab, you can connect to eduroam. To do this:
@@ -60,21 +60,43 @@ sudo apt-get update
 sudo apt-get upgrade
 
 8)  Install useful i2c utilities:
-sudo apt-get install python-smbus
 sudo apt-get install i2c-tools
-sudo apt-get install python3-smbus
+sudo apt install python3-rpi.gpio
 
 9) make sure kernel support for i2c is reallyu on
 sudo i2cdetect -y 1
 This should work, and should show something on address 4 of the i2c bus. If not, follow the 'manually enable i2c' instructions from https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
 
 10)Download the lab software:
-First install GIT, which lets you get hold of the software
+First install GIT, which lets you get hold of the software, and subversion which is used in the getlatest script
+
 sudo apt-get install git
+sudo apt-get install subversion
 git clone https://github.com/joemarshall/g54mrt-useful-code.git
 
 11)Install the show ip address script (and an update script which will get latest versions from github when they change.
-cd ~/g54ubi-useful-code/startup-scripts
+cd ~/g54mrt-useful-code/startup-scripts
 sudo cp rc.local /etc/rc.local
 sudo cp showIP.py /home/pi
 sudo cp grovepi.py /home/pi
+sudo cp grovelcd.py /home/pi
+sudo cp checkUpdate.sh /home/pi
+
+12)Install python3 virtual environment (optional - this makes it so you don't have to type python3 to run your scripts) and make it run as default on login
+sudo apt-get install python3-pip
+sudo pip3 install virtualenv
+virtualenv --system-site-packages py3
+echo "source ~/py3/bin/activate\n" >> ~/.profile
+
+13)Add g54mrt user and get the latest grovepi stuff into that user
+sudo adduser g54mrt
+cd /home/g54mrt
+sudo cp /home/pi/g54mrt-useful-code/grovepi-base/getlatest.sh .
+sudo chown g54mrt.g54mrt /home/g54mrt/getlatest.sh
+sudo -u g54mrt bash ./getlatest.sh
+sudo adduser g54mrt i2c 
+
+14) Login as g54mrt then make a virtualenv there too 
+virtualenv --system-site-packages py3
+printf "source ~/py3/bin/activate\n" >> ~/.profile
+
