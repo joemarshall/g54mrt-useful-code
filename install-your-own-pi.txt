@@ -13,7 +13,7 @@ http://sourceforge.net/projects/win32diskimager/?source=typ_redirect
 Make raspberry pi talk to the grovepi (via I2C)
 https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c
 Start up the raspberry pi with a screen/keyboard (you can connect hdmi to screens in the lab, ask us if you need a keyboard (or unplug from lab machines))
-1) sudo-raspi config (if it isn't already in raspi-config)
+1) sudo raspi-config (if it isn't already in raspi-config)
 2) Select interfacing options
 3) Select I2C, and press yes to everything - I2C is how the raspberry pi talks to the grovepi board
 4) Log in (pi / raspberry)
