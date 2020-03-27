@@ -30,6 +30,7 @@ wget -N https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_a
 sudo apt-get install -y screen
 sudo apt-get install -y libncurses5
 sudo dpkg -i avrdude_5.10-4_armhf.deb
+rm avrdude_5.10-4_armhf.deb.1
 
 
 sudo /usr/bin/python /home/pi/checkFirmware.py
