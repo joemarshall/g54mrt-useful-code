@@ -36,11 +36,6 @@ def doUpdate():
         import showIP
     else:
        grovelcd.setText("Update failed\nPress button")
-
-    while grovepi.digitalRead(2)==0:
-        time.sleep(0.01)
-    while grovepi.digitalRead(2)==1:
-        time.sleep(0.01)
     grovelcd.setText("")
 
 #time.sleep(5)

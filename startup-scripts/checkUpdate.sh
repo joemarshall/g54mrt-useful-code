@@ -36,4 +36,4 @@ fi
 
 sudo chown pi.pi -R /home/pi/g54mrt-useful-code
 sudo systemctl disable serial-getty@ttyAMA0.service
-sudo /usr/bin/python /home/pi/g54mrt-useful-code/startup-scripts/checkFirmware.py
+sudo /usr/bin/python /home/pi/checkFirmware.py
