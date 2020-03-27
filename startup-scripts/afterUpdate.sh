@@ -26,10 +26,11 @@ sudo chown g54mrt.g54mrt /home/g54mrt/.ssh/authorized_keys
 sudo chmod 644 /home/g54mrt/.ssh/authorized_keys
 
 cd /home/pi
-wget https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
+wget -N https://github.com/DexterInd/AVRDUDE/raw/master/avrdude/avrdude_5.10-4_armhf.deb
 sudo apt-get install -y screen
 sudo apt-get install -y libncurses5
 sudo dpkg -i avrdude_5.10-4_armhf.deb
+
 
 sudo /usr/bin/python /home/pi/checkFirmware.py
 
