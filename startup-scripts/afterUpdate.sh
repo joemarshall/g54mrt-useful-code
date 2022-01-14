@@ -14,16 +14,16 @@ then
     sudo cp /home/pi/g54mrt-useful-code/grovepi-base/grovepi.py /home/pi/grovepi.py
     sudo cp -r /home/pi/g54mrt-useful-code/grovepi-base/smbus2 /home/pi/smbus2
 fi
-cd /home/g54mrt
+cd /home/dss
 sudo cp /home/pi/g54mrt-useful-code/grovepi-base/getlatest.sh .
-sudo chown g54mrt.g54mrt /home/g54mrt/getlatest.sh
-sudo -u g54mrt bash ./getlatest.sh
+sudo chown dss.dss /home/dss/getlatest.sh
+sudo -u dss bash ./getlatest.sh
 
-sudo mkdir /home/g54mrt/.ssh
-sudo cp /home/pi/g54mrt-useful-code/startup-scripts/authorized_keys /home/g54mrt/.ssh/
-sudo chown g54mrt.g54mrt /home/g54mrt/.ssh
-sudo chown g54mrt.g54mrt /home/g54mrt/.ssh/authorized_keys
-sudo chmod 644 /home/g54mrt/.ssh/authorized_keys
+sudo mkdir /home/dss/.ssh
+sudo cp /home/pi/g54mrt-useful-code/startup-scripts/authorized_keys /home/dss/.ssh/
+sudo chown dss.dss /home/dss/.ssh
+sudo chown dss.dss /home/dss/.ssh/authorized_keys
+sudo chmod 644 /home/dss/.ssh/authorized_keys
 
 cd /home/pi
 
