@@ -7,7 +7,7 @@ from subprocess import call
 
 
 def doUpdate():
-    retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p"])
+    retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p"])
     if retVal!=0:
     # needs jumper between ISP and reset
         grovelcd.setText("Jumper wire fromD4 to ISP reset")
@@ -18,16 +18,16 @@ def doUpdate():
     firmwarePath=os.path.join(os.path.dirname(os.path.realpath(__file__)),"grove_pi_firmware.hex")
     print (firmwarePath)
     grovelcd.setText("Try update firmware\n---------------")
-    retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","lfuse:w:0xFF:m"])
+    retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p","-U","lfuse:w:0xFF:m"])
     if retVal==0:
         grovelcd.setText("Try update\n**----------")
-        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","hfuse:w:0xDA:m"])
+        retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p","-U","hfuse:w:0xDA:m"])
     if retVal==0:
         grovelcd.setText("Try update\n****--------")
-        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","efuse:w:0x05:m"])
+        retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p","-U","efuse:w:0xFD:m"])
     if retVal==0:
         grovelcd.setText("Try update\n******------")
-        retVal=call(["/usr/bin/avrdude","-c","gpio","-p","m328p","-U","flash:w:%s"%(firmwarePath)])
+        retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p","-U","flash:w:%s"%(firmwarePath)])
     if retVal==0:
         time.sleep(0.5)
         newVer=grovepi.version()
