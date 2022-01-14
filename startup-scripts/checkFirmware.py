@@ -3,6 +3,7 @@ import grovelcd
 import time
 import os
 from subprocess import call
+import grovepi
 
 
 def unexportGPIO(num):
@@ -68,11 +69,11 @@ try:
     clearGPIO()
     # important that this happens after we reset the grovepi board
     # or else we lose connection
-    import grovepi
-    currentVersion= grovepi.version().split(".")
-    verNum=map(int,currentVersion)
-    if verNum!=[1,4,0] or verNum[0]==255:
+    currentVersion= grovepi.version()
+    if currentVersion!="1.4.0":
         needsUpdate=True
+    else:
+        print(f"Current firmware:{currentVersion}")
 except:
     needsUpdate=True
 
