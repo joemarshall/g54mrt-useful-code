@@ -43,7 +43,7 @@ needsUpdate=False
 try:
     currentVersion= grovepi.version().split(".")
     verNum=map(int,currentVersion)
-    if verNum!=[1,2,7] or verNum[0]==255:
+    if verNum!=[1,4,0] or verNum[0]==255:
         needsUpdate=True
 except:
     needsUpdate=True
