@@ -6,7 +6,31 @@ import os
 from subprocess import call
 
 
+def unexportGPIO(num):
+    gpioFolder=f'/sys/class/gpio{num}'
+    if os.path.exists(gpioFolder):
+        with open('/sys/class/gpio/unexport','w') as f:
+            f.write(f"{num}")
+
+# clear up any weird state left by firmware flashing 
+# and/or make sure GPIOs are in a good state for flashing again
+def clearGPIO():
+    # unexport gpios
+    for c in range(8,12):
+        unexportGPIO(c)
+    with open('/sys/class/gpio/export','w') as f:
+        f.write("8")
+    with open('/sys/class/gpio/gpio8/direction','w') as f:
+        f.write("out")
+    with open('/sys/class/gpio/gpio8/value','w') as f:
+        f.write("1")
+    for c in range(8,12):
+        unexportGPIO(c)
+
+
+
 def doUpdate():
+
     retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p"])
     if retVal!=0:
     # needs jumper between ISP and reset
@@ -41,6 +65,7 @@ def doUpdate():
 #time.sleep(5)
 needsUpdate=False
 try:
+    clearGPIO()
     currentVersion= grovepi.version().split(".")
     verNum=map(int,currentVersion)
     if verNum!=[1,4,0] or verNum[0]==255:
@@ -59,5 +84,6 @@ if needsUpdate:
   #      time.sleep(0.01)
     
     doUpdate()
+    clearGPIO()
 
 
