@@ -7,7 +7,7 @@ from subprocess import call
 
 
 def unexportGPIO(num):
-    gpioFolder=f'/sys/class/gpio{num}'
+    gpioFolder=f'/sys/class/gpio/gpio{num}'
     if os.path.exists(gpioFolder):
         with open('/sys/class/gpio/unexport','w') as f:
             f.write(f"{num}")
