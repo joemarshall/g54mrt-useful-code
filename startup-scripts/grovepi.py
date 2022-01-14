@@ -31,7 +31,7 @@ else:
     p_version=3
 
 rev = GPIO.RPI_REVISION
-if rev == 2 or rev == 3:
+if rev > 1:
     bus = smbus.SMBus(1) 
 else:
     bus = smbus.SMBus(0) 
