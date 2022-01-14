@@ -1,5 +1,6 @@
 # grovepi.py
-# v1.5, with Joe M additions
+# Based on old grovepi versions
+# Works with firmware 1.4.0 (and 1.2.7 in theory)
 # This file provides the basic functions for using the GrovePi
 #
 # Joe M: added things to a)make it faster, and b)do retries when i2c fails, as it seems to do sometimes,
@@ -7,7 +8,7 @@
 #
 # Karan Nayan, Joe Marshall
 # Initial Date: 13 Feb 2014
-# Last Updated: 13 Mar 2020
+# Last Updated: 14 Jan 2022
 # 
 #
 # http://www.dexterindustries.com/
@@ -30,11 +31,22 @@ if sys.version_info<(3,0):
 else:
     p_version=3
 
-rev = GPIO.RPI_REVISION
-if rev > 1:
-    bus = smbus.SMBus(1) 
-else:
-    bus = smbus.SMBus(0) 
+bus=None
+def resetBus(retries):
+    global bus
+    if bus!=None:
+        bus.close()
+        bus=None
+        # if we have a lot of retries then sleep so that bus definitely gets closed properly
+        if retries>=5: 
+            time.sleep(0.1)
+    rev = GPIO.RPI_REVISION
+    if rev > 1:
+        bus = smbus.SMBus(1) 
+    else:
+        bus = smbus.SMBus(0) 
+
+resetBus(0)
 
 data_not_available_cmd=23
 
@@ -68,6 +80,7 @@ def write_i2c_block(block):
         try:
             return bus.write_i2c_block_data(address, 1,block)
         except IOError:
+            resetBus(i)
             if debug:
                 print ("IOError write_i2c_block")
     if debug:
@@ -81,6 +94,7 @@ def read_i2c_byte():
         try:
             return bus.read_byte(address)
         except IOError:
+            resetBus(i)
             if debug:
                 print ("IOError")
     if debug:
@@ -103,6 +117,7 @@ def read_i2c_block(no_bytes):
                 continue
             return retVal
         except IOError:
+            resetBus(i)
             if debug:
                 print ("IOError read_i2c_block")
     if debug:
@@ -153,6 +168,7 @@ def versionList():
 #            print(vCmd)
             return number[1:]
         except IOError:
+            resetBus(i)
             if debug:
                 print ("IOError")
     return [-1,-1,-1]
@@ -167,6 +183,7 @@ def version():
             number = bus.read_i2c_block_data(address,1,4)
             return "%s.%s.%s" % (number[1], number[2], number[3])
         except IOError:
+            resetBus(i)
             if debug:
                 print ("IOError")
     return "-1.-1.-1"
