@@ -110,7 +110,7 @@ def addGraphData(data,x,y,columns,rows):
     global _prevData
     numChars=16//columns
     startChar=0
-    if columns==1 and x==1:
+    if columns>1 and x==1:
         startChar=8
     if rows==2:
         rowIDX=1 if y==1 else 0
@@ -174,7 +174,7 @@ if __name__=="__main__":
       graphData.append(0.5+0.5*math.sin(x))
       graphData=graphData[1:]
       x+=0.1
-      addGraphData(graphData,0,0,1,1)
+      addGraphData(graphData,1,0,2,1)
       time.sleep(0.01)
     setRGB(0,255,0)
 #    setText("Bye bye")

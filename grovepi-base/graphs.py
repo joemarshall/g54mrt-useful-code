@@ -79,12 +79,12 @@ if __name__=="__main__":
     STEP=0.05
     for c in range(1000):
         on_value("sin",math.sin(c*STEP))
-#        time.sleep(0.01)
+        time.sleep(0.01)
     set_style("tan","ff0000",-1,1,1,0)
     for c in range(1000):
         on_value("sin",math.sin(c*STEP))
         on_value("tan",math.tan(c*STEP))
-#        time.sleep(0.01)
+        time.sleep(0.01)
 
 
     set_style("cos","ff0000",-1,1,0,1)
@@ -94,5 +94,5 @@ if __name__=="__main__":
         on_value("tan",math.tan(c*STEP))        
         on_value("cos",math.cos(c*STEP))
         on_value("coss",math.cos(c*STEP)**2)        
-#        time.sleep(0.01)
+        time.sleep(0.01)
 
