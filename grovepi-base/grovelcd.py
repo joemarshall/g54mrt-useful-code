@@ -120,7 +120,6 @@ def addGraphData(data,x,y,columns,rows):
             dataEnd=((c+1)*len(data))//numChars
             if dataEnd<=dataStart:
                 dataEnd=dataStart+1
-            print(dataStart,dataEnd,data[dataStart:dataEnd])
             outVal=max(data[dataStart:dataEnd])
             outVal=max(outVal,0)
             outVal=min(outVal,1)
@@ -137,7 +136,6 @@ def addGraphData(data,x,y,columns,rows):
             dataEnd=((c+1)*len(data))//numChars
             if dataEnd<=dataStart:
                 dataEnd=dataStart+1
-            print(dataStart,dataEnd,data[dataStart:dataEnd])
             outVal=max(data[dataStart:dataEnd])
             outVal=max(outVal,0)
             outVal=min(outVal,1)
