@@ -15,6 +15,8 @@ def unexportGPIO(num):
 # clear up any weird state left by firmware flashing 
 # and/or make sure GPIOs are in a good state for flashing again
 def clearGPIO():
+    # close grovepi bus
+    grovepi.closeBus()
     # unexport gpios
     for c in range(8,12):
         unexportGPIO(c)
@@ -30,7 +32,7 @@ def clearGPIO():
 
 
 def doUpdate():
-
+    clearGPIO()
     retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p"])
     if retVal!=0:
     # needs jumper between ISP and reset
@@ -81,11 +83,6 @@ if needsUpdate:
     grovelcd.setRGB(128,128,128)
     grovelcd.setText("Old firmware")
 
-   # while grovepi.digitalRead(2)==0:
-  #      time.sleep(0.01)
-    ## require release of button
-  #  while grovepi.digitalRead(2)==1:
-  #      time.sleep(0.01)
     
     doUpdate()
     clearGPIO()
