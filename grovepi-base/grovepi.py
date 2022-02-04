@@ -169,6 +169,8 @@ def digitalWrite(pin, value):
     
 def versionList():    
     """ Read the firmware version from the GrovePI board """
+    if bus==None:
+        resetBus(-1)
     for i in range(retries):
         try:
             write_i2c_block(version_cmd+[unused,unused,unused])
