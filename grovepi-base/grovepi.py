@@ -32,6 +32,7 @@ else:
     p_version=3
 
 bus=None
+
 def resetBus(retries):
     global bus
     if bus!=None:
@@ -47,6 +48,7 @@ def resetBus(retries):
         bus = smbus.SMBus(0) 
 
 def closeBus():
+    global bus
     if bus!=None:
         bus.close()
         bus=None
