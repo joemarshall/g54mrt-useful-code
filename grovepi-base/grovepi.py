@@ -46,6 +46,11 @@ def resetBus(retries):
     else:
         bus = smbus.SMBus(0) 
 
+def closeBus():
+    if bus!=None:
+        bus.close()
+        bus=None
+
 resetBus(0)
 
 data_not_available_cmd=23
