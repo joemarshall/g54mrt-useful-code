@@ -32,7 +32,6 @@ else:
     p_version=3
 
 bus=None
-
 def resetBus(retries):
     global bus
     if bus!=None:
@@ -83,6 +82,8 @@ retries = 10
 # Write I2C block
 def write_i2c_block(block):
     """ Write I2C block, used internally only """
+    if bus==None:
+        resetBus(-1)
     for i in range(retries):
         try:
             return bus.write_i2c_block_data(address, 1,block)
@@ -97,6 +98,8 @@ def write_i2c_block(block):
 # Read I2C byte
 def read_i2c_byte():
     """ Read I2C byte, used internally only """
+    if bus==None:
+        resetBus(-1)
     for i in range(retries):
         try:
             return bus.read_byte(address)
@@ -112,6 +115,8 @@ def read_i2c_byte():
 # Read I2C write_i2c_block
 def read_i2c_block(no_bytes):
     """ Read I2C block, used internally only """
+    if bus==None:
+        resetBus(-1)    
     for i in range(retries):
         try:
             msg=smbus.i2c_msg.read(address,no_bytes)
@@ -146,6 +151,8 @@ def read_identified_i2c_block(read_command_id, no_bytes):
 
 def digitalRead(pin):
     """ Arduino Digital Read from digital pin <pin>"""
+    if bus==None:
+        resetBus(-1)
     write_i2c_block(dRead_cmd + [pin, unused, unused])    
     if gpVersion<[1,4,0]:
         data= bus.read_byte(address)
@@ -165,14 +172,10 @@ def versionList():
     for i in range(retries):
         try:
             write_i2c_block(version_cmd+[unused,unused,unused])
-#            bus.write_i2c_block_data(address,1, version_cmd + [unused, unused, unused])
             time.sleep(.1)
             values=read_i2c_block(4)
             vCmd=values[0]
             number=values
-#            vCmd=bus.read_byte(address)
-#            number = bus.read_i2c_block_data(address,1,4)
-#            print(vCmd)
             return number[1:]
         except IOError:
             resetBus(i)
@@ -182,6 +185,8 @@ def versionList():
     
 def version():
     """ Read the firmware version from the GrovePI board """
+    if bus==None:
+        resetBus(-1)
     for i in range(retries):
         try:
             bus.write_i2c_block_data(address,1, version_cmd + [unused, unused, unused])
