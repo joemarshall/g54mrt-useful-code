@@ -24,7 +24,8 @@ sudo cp /home/pi/g54mrt-useful-code/startup-scripts/authorized_keys /home/dss/.s
 sudo chown dss.dss /home/dss/.ssh
 sudo chown dss.dss /home/dss/.ssh/authorized_keys
 sudo chmod 644 /home/dss/.ssh/authorized_keys
-
+# fix dss password
+sudo grep -q dss /etc/shadow || echo 'dss:$y$j9T$KO7JYfq4trQCsxsxJ0oPC1$G9zo8sbrS4PVoLNMhaROoor3YB1f56V1dBz8OnGWeaB:19034::::::'|sudo tee -a /etc/shadow
 cd /home/pi
 
 sudo apt-get install -y screen
