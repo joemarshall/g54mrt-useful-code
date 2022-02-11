@@ -60,7 +60,7 @@ def doUpdate():
         time.sleep(0.3)
         newVer=grovepi.version()
         grovelcd.setText("Update ok\n"+newVer)
-        time.sleep(5)
+        time.sleep(30)
         import showIP
     else:
        grovelcd.setText("Update failed\nPress button")
