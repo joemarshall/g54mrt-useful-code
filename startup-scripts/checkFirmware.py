@@ -55,7 +55,9 @@ def doUpdate():
         grovelcd.setText("Try update\n******------")
         retVal=call(["/usr/bin/avrdude","-c","linuxgpio","-p","m328p","-U","flash:w:%s"%(firmwarePath)])
     if retVal==0:
-        time.sleep(0.5)
+        time.sleep(0.1)
+        clearGPIO()
+        time.sleep(0.3)
         newVer=grovepi.version()
         grovelcd.setText("Update ok\n"+newVer)
         time.sleep(5)
