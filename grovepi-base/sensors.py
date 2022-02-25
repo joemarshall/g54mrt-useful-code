@@ -15,7 +15,7 @@ def set_pins(sensor_pin_mapping:dict):
     _PIN_MAP=sensor_pin_mapping
 
     for sensorName,pin in sensor_pin_mapping.items():
-        sensorName=sensorName.lower()
+        sensorName=sensorName.lower()sens
         sensorName,sensorNum=re.match(r"(\D+)(\d*)",sensorName).groups()
         new_sensor=None
         if sensorName=="light" or sensorName=="temperature_analog" or sensorName=="sound" or sensorName=="rotary_angle":
@@ -91,7 +91,7 @@ class AccelSensor:
     to any motion of the phone, the accelerometer will pick up a constant $9.8 \\frac{m/s}^2$ acceleration due to gravity.
     """
     def __init__(self):
-        if _does_i2c_device_exist(0x18):
+        if _does_i2c_device_exist(0x1E):
             self.accelFn=grove6axis.getAccel
         elif _does_i2c_device_exist(0x19):
             self.accelFn=grovegyro.getAccel
