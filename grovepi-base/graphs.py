@@ -29,6 +29,10 @@ def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None):
         If you set y subgraphs, the graph window will be split vertically from 0 to the maximum subgraph you set.    
     """
     global _rows,_cols,_graph_styles,_graph_values
+    if subgraph_x==None:
+        subgraph_x=0
+    if subgraph_y==None:
+        subgraph_y=0
     if subgraph_x>=2 or subgraph_y>=2:
         print("Only 2x2 graphs are supported on raspberry pi")
     if subgraph_x!=None:
