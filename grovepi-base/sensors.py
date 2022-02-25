@@ -15,7 +15,7 @@ def set_pins(sensor_pin_mapping:dict):
     _PIN_MAP=sensor_pin_mapping
 
     for sensorName,pin in sensor_pin_mapping.items():
-        sensorName=sensorName.lower()sens
+        sensorName=sensorName.lower()
         sensorName,sensorNum=re.match(r"(\D+)(\d*)",sensorName).groups()
         new_sensor=None
         if sensorName=="light" or sensorName=="temperature_analog" or sensorName=="sound" or sensorName=="rotary_angle":
