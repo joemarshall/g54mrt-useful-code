@@ -19,5 +19,5 @@ fi
 cd /home/pi
 /usr/bin/sudo -u pi /usr/bin/python3 /home/pi/showIP.py &
 /usr/bin/sudo -u pi /bin/bash /home/pi/checkUpdate.sh &
-sudo /sbin/iw wlan0 set power_save off
+/sbin/iw wlan0 set power_save off
 exit 0
