@@ -173,7 +173,7 @@ class GyroSensor:
 
     def __init__():
         if not _does_i2c_device_exist(0x19):
-            raise IOError("Please connect an accelerometer board")
+            raise IOError("Please connect an accelerometer and gyro board")
 
     def get_xyz():
         """ Get the rotation of the device
