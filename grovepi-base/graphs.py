@@ -10,6 +10,8 @@ _graph_values={}
 
 GRAPH_BUFFER_SIZE=128
 
+grovelcd.makeGraphChars()
+
 def set_style(graphName,colour,minVal,maxVal,subgraph_x=None,subgraph_y=None):
     """ Set the style of a named graph in the output box.
 
