@@ -7,9 +7,13 @@ import grove6axis,grovepi,grovegyro
 import smbus2 as smbus
 from contextlib import contextmanager
 import re
-### TODO - 1 include grove lcd output (normally)
-### TODO - 2 make graph equivalent on LCDs, using custom characters http://www.matidavid.com/pic/LCD%20interfacing/lcd-custom-character.htm
 
+
+
+def __getattr__(name):
+    if not name in globals():
+        print(f"Can't find sensors.{name}. Don't forget that you need to call sensors.set_pins before any sensor calls")
+    return globals()[name]
 
 def set_pins(sensor_pin_mapping:dict):
     _PIN_MAP=sensor_pin_mapping
