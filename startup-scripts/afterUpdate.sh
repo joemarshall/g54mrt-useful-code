@@ -35,4 +35,5 @@ sudo dpkg -i /home/pi/g54mrt-useful-code/startup-scripts/avrdude_6.2-2_armhf.deb
 
 sudo /sbin/iw wlan0 set power_save off
 sudo /usr/bin/python /home/pi/checkFirmware.py
-
+# make sure libatlas is installed so numpy works
+sudo apt-get install -y --no-upgrade libatlas-base-dev
